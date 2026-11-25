@@ -1,0 +1,1943 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Portfolio d'Alann SAVY, étudiant ingénieur en mécanique — Machines, Robots et Systèmes." />
+  <title>Alann SAVY — Etudiant Ingénieur Mécanique & Robotique</title>
+
+  <!-- Google Fonts: Inter + Plus Jakarta Sans + DM Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ["Inter", "Plus Jakarta Sans", "sans-serif"],
+            mono: ["DM Mono", "monospace"],
+            display: ["Inter", "Plus Jakarta Sans", "sans-serif"],
+          },
+          colors: {
+            ink: "#090a0e",
+            steel: "#a1a1aa",
+            navy: "#0f2557",
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html.dark { color-scheme: dark; }
+    html.light { color-scheme: light; }
+
+    h1, h2, h3, h4, .font-display {
+      font-family: "Inter", "Plus Jakarta Sans", sans-serif;
+      letter-spacing: -0.025em;
+    }
+
+    body {
+      font-family: "Inter", "Plus Jakarta Sans", sans-serif;
+      letter-spacing: -0.015em;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Fond uni strictly identique pour tout le site */
+    .dark body {
+      background-color: #090a0e;
+      color: #ffffff;
+    }
+
+    .light body {
+      background-color: #ffffff;
+      color: #0f2557;
+    }
+
+    .eyebrow::before {
+      content: "";
+      display: inline-block;
+      width: 24px;
+      height: 2px;
+      margin-right: 8px;
+      vertical-align: middle;
+      background: linear-gradient(90deg, #1d4ed8, #60a5fa);
+      border-radius: 9999px;
+    }
+
+    .light .eyebrow::before {
+      background: #0f2557;
+    }
+
+    .dark .tech-tag {
+      border: 1px solid rgba(59, 130, 246, 0.55);
+      background: #090a0e;
+      color: #bfdbfe;
+      border-radius: 9999px;
+    }
+
+    .light .tech-tag {
+      border: 1px solid #0f2557;
+      background: #ffffff;
+      color: #0f2557;
+      border-radius: 9999px;
+    }
+
+    /* Tous les conteneurs partagent le fond uni du thème */
+    .dark .bg-main-navy {
+      background-color: #090a0e !important;
+      color: #ffffff;
+    }
+
+    .light .bg-main-navy {
+      background-color: #ffffff !important;
+      color: #0f2557;
+    }
+
+    /* SYSTÈME DIAPO VERTICAL */
+    .deck-viewport {
+      position: fixed;
+      top: 56px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+    }
+
+    .deck-slide {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 1.5rem 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(100%);
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.45s ease;
+      will-change: transform, opacity;
+      background-color: inherit;
+    }
+
+    .deck-slide.is-active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+      z-index: 10;
+    }
+
+    .deck-slide.is-prev {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(-100%);
+      z-index: 5;
+    }
+
+    .deck-slide.is-next {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(100%);
+      z-index: 5;
+    }
+
+    /* Bandeau déroulable (Dropdown) */
+    .dropdown-panel {
+      transform-origin: top center;
+      transition: opacity 0.22s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .dropdown-panel.is-closed {
+      opacity: 0;
+      transform: translateY(-8px) scaleY(0.97);
+      pointer-events: none;
+    }
+    .dropdown-panel.is-open {
+      opacity: 1;
+      transform: translateY(0) scaleY(1);
+      pointer-events: auto;
+    }
+
+    /* Carrousel section Management */
+    .management-slide {
+      display: none;
+      height: 100%;
+    }
+    .management-slide.active {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    /* Photo fixe dans le hero - Redressée & format d'origine */
+    .hero-image-container {
+      max-width: 240px;
+      height: auto;
+      overflow: hidden;
+      border-radius: 1rem;
+      border: 1px solid rgba(59, 130, 246, 0.6);
+      transform: none;
+      box-shadow: 0 20px 44px rgba(15, 23, 42, 0.75), 0 0 24px rgba(29, 78, 216, 0.28);
+    }
+    .light .hero-image-container {
+      border: 2px solid #0f2557;
+      box-shadow: 0 18px 34px rgba(15, 37, 87, 0.20);
+    }
+    .hero-image-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      transition: transform 0.6s ease;
+    }
+
+    /* Mosaïque Centres d'Intérêt */
+    .interests-mosaic {
+      display: grid;
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      grid-template-rows: repeat(2, 205px);
+      gap: 0.9rem;
+    }
+
+    .interest-tile {
+      isolation: isolate;
+      position: relative;
+      overflow: hidden;
+      border-radius: 1rem;
+      background-color: #090a0e;
+      border: 1px solid rgba(59, 130, 246, 0.35);
+    }
+
+    .light .interest-tile {
+      background-color: #ffffff;
+      border: 2px solid #0f2557;
+    }
+
+    .interest-tile--travel { grid-column: span 6; grid-row: span 2; }
+    .interest-tile--hike { grid-column: span 3; grid-row: span 1; }
+    .interest-tile--adventure { grid-column: span 3; grid-row: span 1; }
+    .interest-tile--creation { grid-column: span 6; grid-row: span 1; }
+
+    .interest-image, .interest-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background-position: center;
+      background-size: cover;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
+    }
+
+    .interest-tile::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(180deg, rgba(9, 10, 14, 0.12) 15%, rgba(15, 23, 42, 0.78) 65%, rgba(9, 10, 14, 0.94) 100%);
+    }
+
+    .interest-tile:hover .interest-image,
+    .interest-tile:hover .interest-video {
+      transform: scale(1.06);
+      filter: saturate(1.16) brightness(1.05);
+    }
+
+    .interest-copy {
+      position: absolute;
+      z-index: 2;
+      inset: auto 1.2rem 1.2rem;
+      color: #ffffff;
+    }
+
+    .interest-number {
+      font-family: "DM Mono", monospace;
+      font-size: .68rem;
+      color: #93c5fd;
+      letter-spacing: .16em;
+    }
+
+    @media (max-width: 767px) {
+      .interests-mosaic {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        gap: 0.75rem;
+      }
+      .interest-tile--travel,
+      .interest-tile--hike,
+      .interest-tile--adventure,
+      .interest-tile--creation {
+        grid-column: span 1;
+        grid-row: span 1;
+        height: 165px;
+      }
+    }
+  </style>
+
+  <script>
+    (() => {
+      try {
+        const savedTheme = localStorage.getItem('alann-portfolio-theme');
+        const theme = savedTheme || 'dark';
+        document.documentElement.classList.remove('dark', 'light');
+        document.documentElement.classList.add(theme);
+
+        const savedLang = localStorage.getItem('alann-portfolio-lang') || 'fr';
+        document.documentElement.setAttribute('lang', savedLang);
+      } catch {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
+</head>
+<body class="overflow-hidden font-sans antialiased leading-[1.2]">
+
+  <!-- HEADER ET BANDEAU -->
+  <header class="fixed inset-x-0 top-0 z-50 border-b dark:border-blue-800/75 border-[#0f2557]/25 dark:bg-[#090a0e] bg-white">
+    <div class="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
+
+      <button type="button" onclick="goToSlide(0)" class="group flex items-center gap-2.5 text-left" data-i18n-aria="nav.home_aria" aria-label="Accueil">
+        <span class="grid h-8 w-8 place-items-center rounded-lg border dark:border-blue-500/80 border-[#0f2557] dark:bg-blue-900/75 bg-[#0f2557] font-mono text-xs font-bold text-white transition dark:group-hover:bg-blue-600 dark:group-hover:border-blue-400 group-hover:bg-black group-hover:border-black">AS</span>
+        <span class="hidden text-xs font-bold tracking-[.18em] dark:text-white text-[#0f2557] sm:block">ALANN SAVY</span>
+      </button>
+
+      <!-- BANDEAU DÉROULABLE & NAVIGATION -->
+      <div class="relative flex items-center gap-2">
+        <button id="sections-dropdown-btn" type="button" aria-expanded="false" aria-controls="sections-dropdown-panel"
+          class="flex h-8 items-center gap-2.5 rounded-lg border dark:border-blue-700/85 border-[#0f2557] bg-main-navy px-3 font-mono text-xs font-bold uppercase tracking-[.1em] dark:text-white text-[#0f2557] transition dark:hover:border-blue-400 hover:bg-[#0f2557] hover:text-white">
+          <i class="fa-solid fa-layer-group text-[11px] dark:text-blue-400 text-[#0f2557] group-hover:text-white"></i>
+          <span id="current-slide-label" class="max-w-[140px] sm:max-w-[220px] truncate">00 · Accueil</span>
+          <span id="slide-counter" class="opacity-85 text-[10px] dark:text-blue-300 text-[#0f2557]">1/9</span>
+          <i id="sections-chevron" class="fa-solid fa-chevron-down text-[9px] dark:text-blue-400 text-[#0f2557] transition-transform duration-200"></i>
+        </button>
+
+        <div class="hidden sm:flex items-center gap-1">
+          <button id="slide-prev-btn" type="button" data-i18n-title="nav.prev_slide" data-i18n-aria="nav.prev_slide" title="Diapo précédente" aria-label="Diapo précédente"
+            class="grid h-8 w-8 place-items-center rounded-lg border dark:border-blue-800/75 border-[#0f2557]/40 bg-main-navy dark:text-white text-[#0f2557] transition dark:hover:border-blue-400 hover:border-[#0f2557] hover:bg-[#0f2557] hover:text-white">
+            <i class="fa-solid fa-arrow-up text-[10px]"></i>
+          </button>
+          <button id="slide-next-btn" type="button" data-i18n-title="nav.next_slide" data-i18n-aria="nav.next_slide" title="Diapo suivante" aria-label="Diapo suivante"
+            class="grid h-8 w-8 place-items-center rounded-lg border dark:border-blue-800/75 border-[#0f2557]/40 bg-main-navy dark:text-white text-[#0f2557] transition dark:hover:border-blue-400 hover:border-[#0f2557] hover:bg-[#0f2557] hover:text-white">
+            <i class="fa-solid fa-arrow-down text-[10px]"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="lang-toggle" type="button" class="flex h-8 items-center gap-1.5 rounded-lg border dark:border-blue-800/75 border-[#0f2557]/45 px-2 font-mono text-[11px] font-semibold dark:text-white text-[#0f2557] dark:hover:border-blue-400 hover:border-[#0f2557] hover:bg-[#0f2557] hover:text-white transition" data-i18n-title="nav.lang_title" title="Switch Language">
+          <i class="fa-solid fa-globe text-xs dark:text-blue-400 text-[#0f2557]"></i>
+          <span id="lang-label">EN</span>
+        </button>
+
+        <button id="theme-toggle" type="button" class="grid h-8 w-8 place-items-center rounded-lg border dark:border-blue-800/75 border-[#0f2557]/45 dark:text-white text-[#0f2557] dark:hover:border-blue-400 hover:border-[#0f2557] hover:bg-[#0f2557] hover:text-white transition" data-i18n-title="nav.theme_title" data-i18n-aria="nav.theme_title" title="Changer le thème" aria-label="Changer le thème">
+          <i class="fa-solid fa-moon dark:hidden text-xs text-[#0f2557]"></i>
+          <i class="fa-solid fa-sun hidden dark:block text-xs text-blue-300"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- PANNEAU DÉROULABLE DES SECTIONS -->
+    <div id="sections-dropdown-panel" class="dropdown-panel is-closed absolute left-0 right-0 top-[56px] border-b dark:border-blue-800/80 border-[#0f2557]/30 dark:bg-[#090a0e] bg-white shadow-2xl z-50">
+      <div class="mx-auto max-w-7xl px-4 py-4 sm:px-6">
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-mono text-[10px] uppercase tracking-[.15em] dark:text-blue-300 text-[#0f2557]" data-i18n="dropdown.title">
+            Bandeau de navigation · Sélectionner une diapositive
+          </span>
+          <span class="font-mono text-[10px] dark:text-zinc-400 text-black/70 hidden sm:inline" data-i18n="dropdown.hint">
+            Molette / Flèches ↑ ↓ pour défiler verticalement
+          </span>
+        </div>
+
+        <div id="sections-dropdown-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-2">
+          <!-- Rempli dynamiquement -->
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- SCÈNE DIAPORAMA VERTICAL -->
+  <main id="deck-viewport" class="deck-viewport">
+
+    <!-- DIAPO 0 : HERO -->
+    <section id="top" data-slide-title-fr="Accueil" data-slide-title-en="Home" data-slide-code="00" class="deck-slide is-active">
+      <div class="mx-auto w-full max-w-7xl px-4 sm:px-6">
+        <div class="relative">
+          <p class="eyebrow font-mono text-[10px] uppercase tracking-[.18em] dark:text-blue-300 text-[#0f2557]" data-i18n="hero.eyebrow">Portfolio · Élève-Ingénieur Mécanique / MRS</p>
+
+          <div class="mt-1 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <h1 class="leading-[0.9] tracking-[-0.04em] font-semibold select-none">
+              <span class="block text-[#0f2557] dark:text-white text-[3.8rem] sm:text-[5.5rem] lg:text-[7.5rem]">
+                Alann
+              </span>
+              <span class="block dark:text-white text-black text-[3.8rem] sm:text-[5.5rem] lg:text-[7.5rem] pl-[0.75em] drop-shadow-[0_0_24px_rgba(9,10,14,0.25)]">
+                SAVY
+              </span>
+            </h1>
+
+            <div class="hidden lg:block shrink-0 mr-4">
+              <div class="hero-image-container">
+                <img id="heroProfileImage" src="assets/photoprofil.jpg" data-i18n-alt="hero.photo_alt" alt="Photo de profil d'Alann Savy" onerror="this.style.display='none';" />
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-4 flex flex-col items-end text-right ml-auto max-w-2xl">
+            <p class="font-mono text-xs uppercase tracking-wider dark:text-blue-300 text-[#0f2557] font-semibold" data-i18n="hero.subtitle">
+              Machines, Robots et Systèmes @ SIGMA Clermont
+            </p>
+
+            <p class="mt-3 max-w-xl text-sm sm:text-base font-normal leading-[1.2] dark:text-zinc-200 text-black" data-i18n="hero.desc">
+              Étudiant ingénieur en mécanique, je combine modélisation, automatique multivariable et simulation pour concevoir des systèmes mécatroniques complexes — avec un intérêt affirmé pour la robotique et le ferroviaire.
+            </p>
+
+            <p class="mt-3 font-mono text-[11px] tracking-wide dark:text-blue-300/80 text-[#0f2557]" data-i18n="hero.domains">
+              Robotics · Mechatronics · Simulation · Control Engineering · Rail Systems
+            </p>
+
+            <div class="mt-6 flex flex-wrap justify-end gap-2.5">
+              <button type="button" onclick="goToSlide(3)" class="inline-flex items-center gap-2 rounded-xl dark:bg-blue-700 bg-[#0f2557] px-4 py-2.5 text-[11px] font-bold uppercase tracking-[.12em] text-white transition hover:-translate-y-0.5 dark:hover:bg-blue-600 dark:shadow-[0_8px_24px_rgba(29,78,216,0.45)] hover:bg-black" data-i18n="hero.btn_projects">
+                Découvrir les projets ↘
+              </button>
+              <button type="button" onclick="goToSlide(8)" class="inline-flex items-center gap-2 rounded-xl border dark:border-blue-700/80 border-[#0f2557] bg-main-navy px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[.12em] dark:text-white text-[#0f2557] transition dark:hover:border-blue-400 hover:bg-[#0f2557] hover:text-white">
+                alann.savy@sigma-clermont.fr
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAPO 1 : SECTION 01 PRÉSENTATION & PROFIL -->
+    <section id="profil" data-slide-title-fr="Présentation & Profil" data-slide-title-en="About & Profile" data-slide-code="01" class="deck-slide is-next bg-main-navy">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 w-full">
+        <div class="border-b dark:border-blue-800/70 border-[#0f2557]/25 pb-2.5">
+          <p class="eyebrow font-mono text-[10px] uppercase tracking-[.18em] dark:text-blue-300 text-[#0f2557]" data-i18n="profil.eyebrow">01 / Présentation & Profil</p>
+          <h2 class="mt-1 text-2xl font-semibold dark:text-white text-[#0f2557] sm:text-3xl lg:text-4xl leading-[1.15]" data-i18n="profil.title">Conception, Automatique & Vision Globale.</h2>
+          <p class="mt-0.5 text-xs dark:text-zinc-300 text-black/80 max-w-3xl leading-[1.2]" data-i18n="profil.subtitle">
+            Élève-ingénieur en Mécanique à SIGMA Clermont, spécialisé en Machines, Robots et Systèmes (MRS).
+          </p>
+        </div>
+
+        <div class="mt-4 grid gap-5 lg:grid-cols-12 lg:items-stretch">
+          <div class="lg:col-span-7 flex flex-col justify-between text-xs sm:text-sm font-normal leading-[1.2] dark:text-zinc-100 text-black">
+            <div class="space-y-3">
+              <p data-i18n="profil.bio_p1">
+                Passionné par l'innovation technologique et la conception de systèmes complexes, je suis étudiant en cycle ingénieur mécanique, spécialité <strong class="dark:text-blue-300 text-[#0f2557] font-semibold">« Machines, Robots et Systèmes »</strong>, à <strong class="dark:text-white text-[#0f2557] font-semibold">SIGMA Clermont</strong>. J'ai un attrait particulier pour les défis techniques liés à la robotique autonome, aux systèmes embarqués et à l'industrie ferroviaire.
+              </p>
+              <p data-i18n="profil.bio_p2">
+                Au fil de mon cursus, j'ai consolidé mes compétences en conception 3D (<span class="font-mono font-medium dark:text-blue-300 text-[#0f2557]">CATIA V5</span>, <span class="font-mono font-medium dark:text-blue-300 text-[#0f2557]">3DEXPERIENCE</span>), calcul par éléments finis (<span class="font-mono font-medium dark:text-blue-300 text-[#0f2557]">ANSYS</span>) et commande/simulation (<span class="font-mono font-medium dark:text-blue-300 text-[#0f2557]">Python</span>, <span class="font-mono font-medium dark:text-blue-300 text-[#0f2557]">MATLAB / Simulink</span>), que j'ai appliquées sur des projets concrets allant du prototype mécatronique au simulateur dynamique.
+              </p>
+              <p data-i18n="profil.bio_p3">
+                Mon expérience d'assistant ingénieur en recherche à l'<strong class="dark:text-white text-[#0f2557] font-semibold">Université Polytechnique de Hanoï (HUST)</strong> a renforcé mon expertise en modélisation 6 DDL et lois de commande avancées (LQR, MPC), tout en développant mon adaptabilité au sein d'une équipe internationale.
+              </p>
+              <p data-i18n="profil.bio_p4">
+                En parallèle, mes engagements associatifs (Co-président de l'<strong class="dark:text-white text-[#0f2557] font-semibold">International Team SIGMA</strong> et Président de la <strong class="dark:text-white text-[#0f2557] font-semibold">SIGMA Boutique</strong>) ainsi que mes années d'encadrement BAFA m'ont permis de conjuguer rigueur d'ingénieur, sens du pilotage et leadership humain.
+              </p>
+            </div>
+
+            <div class="mt-3 rounded-2xl border dark:border-blue-600/75 border-[#0f2557] bg-main-navy p-3 flex items-start gap-3">
+              <div class="grid h-8 w-8 shrink-0 place-items-center rounded-xl dark:bg-blue-800/80 bg-[#0f2557] border dark:border-blue-500/70 border-[#0f2557] text-sm text-white">
+                <i class="fa-solid fa-calendar-check"></i>
+              </div>
+              <div>
+                <h4 class="font-mono text-[10px] uppercase tracking-wider font-semibold dark:text-blue-300 text-[#0f2557]" data-i18n="profil.avail_title">Objectif & Disponibilité Stage</h4>
+                <p class="mt-0.5 text-xs dark:text-zinc-200 text-black leading-[1.2]" data-i18n="profil.avail_desc">
+                  À la recherche d'un stage de fin d'études (3 mois maximum) à partir d'<strong class="dark:text-white text-[#0f2557]">Avril 2027</strong> en robotique, mécatronique ou ingénierie ferroviaire.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 grid gap-2 sm:grid-cols-2 lg:grid-cols-1">
+            <article class="rounded-2xl border dark:border-blue-800/70 border-[#0f2557]/30 bg-main-navy p-3 transition dark:hover:border-blue-400 hover:border-[#0f2557]">
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-[10px] font-semibold dark:text-blue-300 text-[#0f2557]" data-i18n="profil.p1_tag">01 / CAO & MÉCANIQUE</span>
+                <i class="fa-solid fa-cube text-xs dark:text-blue-400 text-[#0f2557]"></i>
+              </div>
+              <h3 class="mt-0.5 text-sm font-semibold dark:text-white text-[#0f2557]" data-i18n="profil.p1_title">Conception & Modélisation 3D</h3>
+              <p class="mt-0.5 text-[11px] dark:text-zinc-300 text-black/75 leading-[1.2]" data-i18n="profil.p1_desc">CATIA V5, 3DEXPERIENCE, mises en plan 2D, cotation ISO, dossiers de fabrication.</p>
+            </article>
+
+            <article class="rounded-2xl border dark:border-blue-800/70 border-[#0f2557]/30 bg-main-navy p-3 transition dark:hover:border-blue-400 hover:border-[#0f2557]">
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-[10px] font-semibold dark:text-blue-300 text-[#0f2557]" data-i18n="profil.p2_tag">02 / AUTOMATIQUE & ROBOTIQUE</span>
+                <i class="fa-solid fa-robot text-xs dark:text-blue-400 text-[#0f2557]"></i>
+              </div>
+              <h3 class="mt-0.5 text-sm font-semibold dark:text-white text-[#0f2557]" data-i18n="profil.p2_title">Robotique & Commandes Avancées</h3>
+              <p class="mt-0.5 text-[11px] dark:text-zinc-300 text-black/75 leading-[1.2]" data-i18n="profil.p2_desc">Cinématique/Dynamique 6 DDL, PID cascade, LQR discret, MPC temps réel.</p>
+            </article>
+
+            <article class="rounded-2xl border dark:border-blue-800/70 border-[#0f2557]/30 bg-main-navy p-3 transition dark:hover:border-blue-400 hover:border-[#0f2557]">
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-[10px] font-semibold dark:text-blue-300 text-[#0f2557]" data-i18n="profil.p3_tag">03 / SIMULATION & CALCULS</span>
+                <i class="fa-solid fa-chart-line text-xs dark:text-blue-400 text-[#0f2557]"></i>
+              </div>
+              <h3 class="mt-0.5 text-sm font-semibold dark:text-white text-[#0f2557]" data-i18n="profil.p3_title">Simulation Numérique & FEA</h3>
+              <p class="mt-0.5 text-[11px] dark:text-zinc-300 text-black/75 leading-[1.2]" data-i18n="profil.p3_desc">MATLAB / Simulink, éléments finis ANSYS FEA, calculs fréquentiels et dynamiques.</p>
+            </article>
+
+            <article class="rounded-2xl border dark:border-blue-800/70 border-[#0f2557]/30 bg-main-navy p-3 transition dark:hover:border-blue-400 hover:border-[#0f2557]">
+              <div class="flex items-center justify-between">
+                <span class="font-mono text-[10px] font-semibold dark:text-blue-300 text-[#0f2557]" data-i18n="profil.p4_tag">04 / MANAGEMENT & SYSTÈMES</span>
+                <i class="fa-solid fa-users-gear text-xs dark:text-blue-400 text-[#0f2557]"></i>
+              </div>
+              <h3 class="mt-0.5 text-sm font-semibold dark:text-white text-[#0f2557]" data-i18n="profil.p4_title">Ingénierie Système & Management</h3>
+              <p class="mt-0.5 text-[11px] dark:text-zinc-300 text-black/75 leading-[1.2]" data-i18n="profil.p4_desc">SysML, AMDEC, gestion de projet, pilotage budgétaire, communication interculturelle.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAPO 2 : SECTION 02 EXPÉRIENCES PROFESSIONNELLES -->
+    <section id="experiences" data-slide-title-fr="Expériences Pro" data-slide-title-en="Experience" data-slide-code="02" class="deck-slide is-next">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 w-full">
+        <div>
+          <p class="eyebrow font-mono text-[10px] uppercase tracking-[.18em] dark:text-blue-300 text-[#0f2557]" data-i18n="exp.eyebrow">02 / Expériences Professionnelles</p>
+          <h2 class="mt-1.5 text-2xl font-semibold dark:text-white text-[#0f2557] sm:text-3xl leading-[1.15]" data-i18n="exp.title">R&D, Recherche & Activités Terrain</h2>
+        </div>
+
+        <div onclick="openModal('modal-drone')" class="mt-5 rounded-2xl border dark:border-blue-700/80 border-[#0f2557] bg-main-navy p-5 space-y-3 cursor-pointer group transition dark:hover:border-blue-400 hover:border-black shadow-lg">
+          <div class="flex flex-wrap justify-between items-start gap-3">
+            <div>
+              <span class="font-mono text-[11px] uppercase dark:text-blue-300 text-[#0f2557] group-hover:underline" data-i18n="exp.main_lab">Laboratoire d'aéronautique · HUST (Hanoï, Vietnam)</span>
+              <h3 class="mt-1 text-xl font-semibold dark:text-white text-[#0f2557] group-hover:underline" data-i18n="exp.main_role">Assistant Ingénieur en laboratoire — Drone Quadricoptère</h3>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="rounded-full font-mono text-[11px] dark:text-white text-[#0f2557] bg-main-navy px-2.5 py-0.5 border dark:border-blue-600/75 border-[#0f2557]" data-i18n="exp.main_date">Mai — Sept. 2026 · 5 mois</span>
+              <span class="font-mono text-[11px] font-semibold dark:text-blue-300 text-[#0f2557] underline" data-i18n="exp.details_btn">Voir détails ↗</span>
+            </div>
+          </div>
+          <p class="text-xs sm:text-sm leading-[1.2] dark:text-zinc-200 text-black" data-i18n="exp.main_desc">
+            Modélisation non linéaire d'un quadricoptère à 6 DDL (12 variables d'état). Conception, implémentation et comparaison de trois architectures de commande en boucle fermée : PID cascade, LQR discret et MPC avec solveur Active-Set codé from scratch.
+          </p>
+          <div class="flex flex-wrap gap-2 pt-1">
+            <span class="tech-tag px-2.5 py-0.5 font-mono text-[11px]">MATLAB / Simulink</span>
+            <span class="tech-tag px-2.5 py-0.5 font-mono text-[11px]" data-i18n="exp.tag_control">Commande LQR / MPC</span>
+            <span class="tech-tag px-2.5 py-0.5 font-mono text-[11px]" data-i18n="exp.tag_model">Modélisation 6 DDL</span>
+          </div>
+        </div>
+
+        <div class="mt-4 rounded-2xl border dark:border-blue-800/70 border-[#0f2557]/35 bg-main-navy p-4 space-y-2">
+          <span class="font-mono text-[10px] uppercase tracking-wider dark:text-blue-300 text-[#0f2557] font-semibold block" data-i18n="exp.comp_header">Expériences professionnelles complémentaires</span>
+          <div class="border-l-2 dark:border-blue-500 border-[#0f2557] pl-3">
+            <span class="font-mono text-[10px] dark:text-blue-300/80 text-black/75" data-i18n="exp.comp1_date">2022 — 2024</span>
+            <h4 class="font-semibold text-xs dark:text-white text-[#0f2557]" data-i18n="exp.comp1_title">Animateur BAFA / Encadrement de Jeunesse</h4>
+            <p class="text-xs dark:text-zinc-300 text-black mt-0.5 leading-[1.2]" data-i18n="exp.comp1_desc">Gestion de groupe, responsabilité de la sécurité, adaptabilité et capacité d'adaptation sur le terrain.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAPO 3 : SECTION 03 PROJETS ACADÉMIQUES -->
+    <section id="projets" data-slide-title-fr="Projets" data-slide-title-en="Projects" data-slide-code="03" class="deck-slide is-next bg-main-navy">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 w-full">
+        <div class="flex flex-col justify-between gap-2 sm:flex-row sm:items-end">
+          <div>
+            <p class="eyebrow font-mono text-[10px] uppercase tracking-[.18em] dark:text-blue-300 text-[#0f2557]" data-i18n="projects.eyebrow">03 / Projets Sélectionnés</p>
+            <h2 class="mt-1 text-2xl font-semibold dark:text-white text-[#0f2557] sm:text-3xl leading-[1.15]" data-i18n="projects.title">Concevoir. Modéliser. Évaluer.</h2>
+          </div>
+          <p class="font-mono text-[10px] dark:text-zinc-300 text-black/75" data-i18n="projects.hint">Cliquez sur un projet pour ouvrir la galerie et les détails.</p>
+        </div>
+
+        <div class="mt-4 grid gap-4 md:grid-cols-2">
+
+          <!-- PROJET 1 -->
+          <article onclick="openModal('modal-drone')" class="group cursor-pointer overflow-hidden rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy transition dark:hover:border-blue-400 hover:border-[#0f2557] flex flex-col justify-between">
+            <div class="relative h-28 sm:h-32 w-full overflow-hidden bg-main-navy">
+              <img src="assets/Drone.jpg" data-i18n-alt="projects.p1_alt" alt="Projet Drone Quadricoptère" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+              <div class="hidden absolute inset-0 flex items-center justify-center bg-main-navy dark:text-white text-[#0f2557]">
+                <span class="font-mono text-xs uppercase" data-i18n="projects.p1_fallback">Simulations 6 DDL</span>
+              </div>
+              <div class="absolute top-2 left-2 z-10 rounded-full px-2.5 py-0.5 font-mono text-[9px] text-white dark:bg-blue-900/90 bg-[#0f2557] border dark:border-blue-500/80 border-white/25">
+                HUST · 2026
+              </div>
+            </div>
+            <div class="p-3.5 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="text-sm sm:text-base font-semibold dark:text-white text-[#0f2557] group-hover:underline" data-i18n="projects.p1_title">Modélisation & Contrôle d'un Quadricoptère</h3>
+                <p class="mt-1 text-xs dark:text-zinc-300 text-black/80 line-clamp-2 leading-[1.2]" data-i18n="projects.p1_desc">Modèle 6 DDL, Van Loan, solveur Active-Set temps réel et benchmark (PID, LQR, MPC).</p>
+              </div>
+              <div class="mt-3 flex items-center justify-between border-t dark:border-blue-900/60 border-[#0f2557]/20 pt-2 font-mono text-[10px]">
+                <span class="dark:text-blue-300 text-[#0f2557] font-medium">MATLAB · LQR/MPC</span>
+                <span class="font-semibold dark:text-white text-[#0f2557]" data-i18n="projects.preview_btn">Aperçu ↗</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJET 2 -->
+          <article onclick="openModal('modal-hexapode')" class="group cursor-pointer overflow-hidden rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy transition dark:hover:border-blue-400 hover:border-[#0f2557] flex flex-col justify-between">
+            <div class="relative h-28 sm:h-32 w-full overflow-hidden bg-main-navy">
+              <img src="assets/Hexapode2.jpg" data-i18n-alt="projects.p2_alt" alt="Projet Hexapode CAO" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+              <div class="hidden absolute inset-0 flex items-center justify-center bg-main-navy dark:text-white text-[#0f2557]">
+                <span class="font-mono text-xs uppercase" data-i18n="projects.p2_fallback">Simulateur Hexapode</span>
+              </div>
+              <div class="absolute top-2 left-2 z-10 rounded-full px-2.5 py-0.5 font-mono text-[9px] text-white dark:bg-blue-900/90 bg-[#0f2557] border dark:border-blue-500/80 border-white/25">
+                SIGMA · 2025-2026
+              </div>
+            </div>
+            <div class="p-3.5 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="text-sm sm:text-base font-semibold dark:text-white text-[#0f2557] group-hover:underline" data-i18n="projects.p2_title">Simulateur Avion & Plateforme Hexapode</h3>
+                <p class="mt-1 text-xs dark:text-zinc-300 text-black/80 line-clamp-2 leading-[1.2]" data-i18n="projects.p2_desc">Conception CATIA V5, boîtier usiné, télémétrie BLE/SimConnect MSFS 2020.</p>
+              </div>
+              <div class="mt-3 flex items-center justify-between border-t dark:border-blue-900/60 border-[#0f2557]/20 pt-2 font-mono text-[10px]">
+                <span class="dark:text-blue-300 text-[#0f2557] font-medium">CATIA · SimConnect · ANSYS</span>
+                <span class="font-semibold dark:text-white text-[#0f2557]" data-i18n="projects.preview_btn">Aperçu ↗</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJET 3 -->
+          <article onclick="openModal('modal-retourneur')" class="group cursor-pointer overflow-hidden rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy transition dark:hover:border-blue-400 hover:border-[#0f2557] flex flex-col justify-between">
+            <div class="relative h-28 sm:h-32 w-full overflow-hidden bg-main-navy">
+              <img src="assets/Projet1A.jpg" data-i18n-alt="projects.p3_alt" alt="Projet Robot Le Retourneur" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+              <div class="hidden absolute inset-0 flex items-center justify-center bg-main-navy dark:text-white text-[#0f2557]">
+                <span class="font-mono text-xs uppercase" data-i18n="projects.p3_fallback">Robot Trieur</span>
+              </div>
+              <div class="absolute top-2 left-2 z-10 rounded-full px-2.5 py-0.5 font-mono text-[9px] text-white dark:bg-blue-900/90 bg-[#0f2557] border dark:border-blue-500/80 border-white/25">
+                SIGMA · 2025 (1A)
+              </div>
+            </div>
+            <div class="p-3.5 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="text-sm sm:text-base font-semibold dark:text-white text-[#0f2557] group-hover:underline" data-i18n="projects.p3_title">Robot Trieur « Le Retourneur »</h3>
+                <p class="mt-1 text-xs dark:text-zinc-300 text-black/80 line-clamp-2 leading-[1.2]" data-i18n="projects.p3_desc">Robot autonome sur glissière à billes, détection TCS3200 et Arduino Uno.</p>
+              </div>
+              <div class="mt-3 flex items-center justify-between border-t dark:border-blue-900/60 border-[#0f2557]/20 pt-2 font-mono text-[10px]">
+                <span class="dark:text-blue-300 text-[#0f2557] font-medium">Arduino · TCS3200 · FabLab</span>
+                <span class="font-semibold dark:text-white text-[#0f2557]" data-i18n="projects.preview_btn">Aperçu ↗</span>
+              </div>
+            </div>
+          </article>
+
+          <!-- PROJET 4 -->
+          <article onclick="openModal('modal-prehenseur')" class="group cursor-pointer overflow-hidden rounded-2xl border dark:border-blue-700/85 border-[#0f2557] bg-main-navy transition dark:hover:border-blue-400 hover:border-[#0f2557] flex flex-col justify-between">
+            <div class="relative h-28 sm:h-32 w-full overflow-hidden bg-main-navy">
+              <img src="assets/Prehenseur.jpg" data-i18n-alt="projects.p4_alt" alt="Projet Préhenseur Souple" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+              <div class="hidden absolute inset-0 flex items-center justify-center bg-main-navy dark:text-white text-[#0f2557]">
+                <span class="font-mono text-xs uppercase" data-i18n="projects.p4_fallback">Préhenseur Souple</span>
+              </div>
+              <div class="absolute top-2 left-2 z-10 rounded-full px-2.5 py-0.5 font-mono text-[9px] text-white dark:bg-blue-900/90 bg-[#0f2557] border dark:border-blue-500/80 border-white/25" data-i18n="projects.p4_badge">
+                Oct. 2026 - En cours
+              </div>
+            </div>
+            <div class="p-3.5 flex-1 flex flex-col justify-between">
+              <div>
+                <h3 class="text-sm sm:text-base font-semibold dark:text-white text-[#0f2557] group-hover:underline" data-i18n="projects.p4_title">Préhenseur Souple (Soft Robotics)</h3>
+                <p class="mt-1 text-xs dark:text-zinc-300 text-black/80 line-clamp-2 leading-[1.2]" data-i18n="projects.p4_desc">CAO paramétrique, FEA ANSYS, PyMechanical, impression 3D TPU et essais.</p>
+              </div>
+              <div class="mt-3 flex items-center justify-between border-t dark:border-blue-900/60 border-[#0f2557]/20 pt-2 font-mono text-[10px]">
+                <span class="dark:text-blue-300 text-[#0f2557] font-medium">ANSYS · PyMechanical · 3D</span>
+                <span class="font-semibold dark:text-white text-[#0f2557]" data-i18n="projects.preview_btn">Aperçu ↗</span>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAPO 4 : SECTION 04 COMPÉTENCES ET LOGICIELS -->
+    <section id="competences" data-slide-title-fr="Compétences" data-slide-title-en="Skills" data-slide-code="04" class="deck-slide is-next">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 w-full">
+        <div>
+          <p class="eyebrow font-mono text-xs uppercase tracking-[.18em] dark:text-blue-300 text-[#0f2557]" data-i18n="skills.eyebrow">04 / Compétences & Outils</p>
+          <h2 class="mt-1.5 text-3xl font-semibold dark:text-white text-[#0f2557] sm:text-4xl leading-[1.15]" data-i18n="skills.title">Savoir-faire Technique & Qualités</h2>
+        </div>
+
+        <div class="mt-5 rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy p-6">
+          <h3 class="font-mono text-xs sm:text-sm uppercase tracking-wider dark:text-blue-300 text-[#0f2557] font-semibold mb-4" data-i18n="skills.sub1">Environnements Logiciels & Outils</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            <div class="flex flex-col items-center justify-center rounded-xl p-4 border dark:border-blue-800/70 border-[#0f2557]/30 bg-main-navy text-center transition dark:hover:border-blue-400 hover:border-[#0f2557]">
+              <img src="assets/matlab.svg" alt="MATLAB Logo" class="h-8 w-8 mb-2 object-contain" />
+              <span class="font-mono text-sm font-semibold dark:text-white text-[#0f2557]">MATLAB</span>
+              <span class="text-xs dark:text-blue-200/80 text-black/75 mt-1" data-i18n="skills.t1_sub">Simulink / Onramp</span>
+            </div>
+            <div class="flex flex-col items-center justify-center rounded-xl p-4 border dark:border-blue-800/70 border-[#0f2557]/30 bg-main-navy text-center transition dark:hover:border-blue-400 hover:border-[#0f2557]">
+              <img src="assets/python.svg" alt="Python Logo" class="h-8 w-8 mb-2 object-contain" />
+              <span class="font-mono text-sm font-semibold dark:text-white text-[#0f2557]">Python</span>
+              <span class="text-xs dark:text-blue-200/80 text-black/75 mt-1" data-i18n="skills.t2_sub">Simulation & Scripts</span>
+            </div>
+            <div class="flex flex-col items-center justify-center rounded-xl p-4 border dark:border-blue-800/70 border-[#0f2557]/30 bg-main-navy text-center transition dark:hover:border-blue-400 hover:border-[#0f2557]">
+              <img src="assets/catia.svg" alt="CATIA Logo" class="h-8 w-8 mb-2 object-contain" />
+              <span class="font-mono text-sm font-semibold dark:text-white text-[#0f2557]">CATIA</span>
+              <span class="text-xs dark:text-blue-200/80 text-black/75 mt-1" data-i18n="skills.t3_sub">CAO 3D & Plans 2D</span>
+            </div>
+            <div class="flex flex-col items-center justify-center rounded-xl p-4 border dark:border-blue-800/70 border-[#0f2557]/30 bg-main-navy text-center transition dark:hover:border-blue-400 hover:border-[#0f2557]">
+              <img src="assets/ansys.svg" alt="ANSYS Logo" class="h-8 w-8 mb-2 object-contain" />
+              <span class="font-mono text-sm font-semibold dark:text-white text-[#0f2557]">ANSYS</span>
+              <span class="text-xs dark:text-blue-200/80 text-black/75 mt-1" data-i18n="skills.t4_sub">FEA & PyMechanical</span>
+            </div>
+            <div class="flex flex-col items-center justify-center rounded-xl p-4 border dark:border-blue-800/70 border-[#0f2557]/30 bg-main-navy text-center transition dark:hover:border-blue-400 hover:border-[#0f2557]">
+              <img src="assets/sql.svg" alt="SQL Logo" class="h-8 w-8 mb-2 object-contain" />
+              <span class="font-mono text-sm font-semibold dark:text-white text-[#0f2557]">SQL</span>
+              <span class="text-xs dark:text-blue-200/80 text-black/75 mt-1" data-i18n="skills.t5_sub">Bases de données</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div class="rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy p-5">
+            <span class="font-mono text-xs font-bold dark:text-blue-400 text-[#0f2557]">01</span>
+            <h4 class="font-semibold text-base dark:text-white text-[#0f2557] mt-1.5" data-i18n="skills.s1_title">Rigueur & Méthode</h4>
+            <p class="text-sm dark:text-zinc-300 text-black/80 mt-1 leading-[1.2]" data-i18n="skills.s1_desc">Rédaction de cahiers des charges, tolérancement et respect des jalons.</p>
+          </div>
+          <div class="rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy p-5">
+            <span class="font-mono text-xs font-bold dark:text-blue-400 text-[#0f2557]">02</span>
+            <h4 class="font-semibold text-base dark:text-white text-[#0f2557] mt-1.5" data-i18n="skills.s2_title">Ouverture Interculturelle</h4>
+            <p class="text-sm dark:text-zinc-300 text-black/80 mt-1 leading-[1.2]" data-i18n="skills.s2_desc">Mobilité 5 mois au Vietnam (HUST) & Co-présidence International Team.</p>
+          </div>
+          <div class="rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy p-5">
+            <span class="font-mono text-xs font-bold dark:text-blue-400 text-[#0f2557]">03</span>
+            <h4 class="font-semibold text-base dark:text-white text-[#0f2557] mt-1.5" data-i18n="skills.s3_title">Gestion d'Équipe</h4>
+            <p class="text-sm dark:text-zinc-300 text-black/80 mt-1 leading-[1.2]" data-i18n="skills.s3_desc">Encadrement d'équipe et pilotage budgétaire à la SIGMA Boutique.</p>
+          </div>
+          <div class="rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy p-5">
+            <span class="font-mono text-xs font-bold dark:text-blue-400 text-[#0f2557]">04</span>
+            <h4 class="font-semibold text-base dark:text-white text-[#0f2557] mt-1.5" data-i18n="skills.s4_title">Esprit Collaboratif</h4>
+            <p class="text-sm dark:text-zinc-300 text-black/80 mt-1 leading-[1.2]" data-i18n="skills.s4_desc">Coopération fluide entre mécaniciens, automaticiens et informaticiens.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAPO 5 : SECTION 05 UN MANAGER DANS L'ÂME -->
+    <section id="management" data-slide-title-fr="Management" data-slide-title-en="Management" data-slide-code="05" class="deck-slide is-next">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 w-full">
+        <div>
+          <p class="eyebrow font-mono text-xs uppercase tracking-[.18em] dark:text-blue-300 text-[#0f2557]" data-i18n="engagements.eyebrow">05 / Un manager dans l'âme</p>
+          <h2 class="mt-1.5 text-3xl font-semibold dark:text-white text-[#0f2557] sm:text-4xl leading-[1.15]" data-i18n="engagements.title">Manager par engagement, leader par expérience</h2>
+        </div>
+
+        <div class="mt-5 grid gap-5 lg:grid-cols-[1.15fr_1fr] lg:items-stretch">
+          <div id="management-left-box" class="relative rounded-2xl border dark:border-blue-800/75 border-[#0f2557] bg-main-navy overflow-hidden flex flex-col h-64 sm:h-80 lg:h-auto">
+            <div class="management-carousel relative flex-1 h-full">
+              <div class="management-slide active">
+                <img src="assets/grizzly.jpg" alt="SIGMA Boutique" class="w-full h-full object-cover" onerror="this.style.display='none';" />
+                <div class="bg-main-navy dark:text-white text-[#0f2557] px-4 py-2.5 text-xs sm:text-sm font-medium border-t dark:border-blue-800/70 border-[#0f2557] shrink-0" data-i18n="engagements.c1_cap">
+                  Président de SIGMA Boutique
+                </div>
+              </div>
+              <div class="management-slide">
+                <img src="assets/welcomeday.jpg" alt="Welcome Day" class="w-full h-full object-cover" onerror="this.style.display='none';" />
+                <div class="bg-main-navy dark:text-white text-[#0f2557] px-4 py-2.5 text-xs sm:text-sm font-medium border-t dark:border-blue-800/70 border-[#0f2557] shrink-0" data-i18n="engagements.c2_cap">
+                  Welcome Day des étudiants internationaux
+                </div>
+              </div>
+              <div class="management-slide">
+                <img src="assets/teambuild1.jpg" alt="Team Building" class="w-full h-full object-cover" onerror="this.style.display='none';" />
+                <div class="bg-main-navy dark:text-white text-[#0f2557] px-4 py-2.5 text-xs sm:text-sm font-medium border-t dark:border-blue-800/70 border-[#0f2557] shrink-0" data-i18n="engagements.c3_cap">
+                  Organisation d'activités de cohésion
+                </div>
+              </div>
+              <div class="management-slide">
+                <img src="assets/teambuild2.jpg" alt="International Team" class="w-full h-full object-cover" onerror="this.style.display='none';" />
+                <div class="bg-main-navy dark:text-white text-[#0f2557] px-4 py-2.5 text-xs sm:text-sm font-medium border-t dark:border-blue-800/70 border-[#0f2557] shrink-0" data-i18n="engagements.c4_cap">
+                  Animation et management d'équipes
+                </div>
+              </div>
+            </div>
+
+            <button id="mgmt-prev" type="button" data-i18n-aria="carousel.prev_img" aria-label="Image précédente" class="absolute left-2.5 top-1/2 -translate-y-1/2 z-10 grid h-8 w-8 place-items-center rounded-full border dark:border-blue-400/70 border-[#0f2557]/40 bg-main-navy dark:text-white text-[#0f2557] hover:bg-[#0f2557] hover:text-white transition">‹</button>
+            <button id="mgmt-next" type="button" data-i18n-aria="carousel.next_img" aria-label="Image suivante" class="absolute right-2.5 top-1/2 -translate-y-1/2 z-10 grid h-8 w-8 place-items-center rounded-full border dark:border-blue-400/70 border-[#0f2557]/40 bg-main-navy dark:text-white text-[#0f2557] hover:bg-[#0f2557] hover:text-white transition">›</button>
+          </div>
+
+          <div id="management-right-box" class="flex flex-col gap-3">
+            <div class="mgmt-card rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy p-4">
+              <h3 class="text-base font-semibold dark:text-white text-[#0f2557]" data-i18n="engagements.r1_title">Président SIGMA Boutique (2025-2026)</h3>
+              <p class="text-xs sm:text-sm dark:text-zinc-300 text-black/80 mt-1 leading-[1.2]" data-i18n="engagements.r1_desc">Gestion budgétaire, négociation fournisseurs, encadrement d'équipe.</p>
+            </div>
+            <div class="mgmt-card rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy p-4">
+              <h3 class="text-base font-semibold dark:text-white text-[#0f2557]" data-i18n="engagements.r2_title">Co-président International Team (2025-2026)</h3>
+              <p class="text-xs sm:text-sm dark:text-zinc-300 text-black/80 mt-1 leading-[1.2]" data-i18n="engagements.r2_desc">Accueil des internationaux, organisation d'événements, coordination bénévoles.</p>
+            </div>
+            <div class="mgmt-card rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/35 bg-main-navy p-4">
+              <h3 class="text-base font-semibold dark:text-white text-[#0f2557]" data-i18n="engagements.r3_title">Animateur BAFA (2022-2024)</h3>
+              <p class="text-xs sm:text-sm dark:text-zinc-300 text-black/80 mt-1 leading-[1.2]" data-i18n="engagements.r3_desc">Encadrement de groupe, prise de décision rapide et cohésion d'équipe sur le terrain.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-4 rounded-2xl border dark:border-blue-800/70 border-[#0f2557]/35 bg-main-navy p-4 sm:p-5 text-sm leading-[1.2] dark:text-zinc-100 text-black">
+          <p data-i18n="engagements.summary">
+            Mon expérience du management allie l'animation terrain BAFA et la direction d'associations étudiantes : encadrer, adapter, piloter des budgets et fédérer des équipes vers des objectifs communs.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAPO 6 : SECTION 06 CENTRES D'INTÉRÊT -->
+    <section id="interets" data-slide-title-fr="Centres d'Intérêt" data-slide-title-en="Interests" data-slide-code="06" class="deck-slide is-next bg-main-navy">
+      <div class="mx-auto max-w-7xl px-4 sm:px-6 w-full">
+        <div>
+          <p class="eyebrow font-mono text-xs uppercase tracking-[.18em] dark:text-blue-300 text-[#0f2557]" data-i18n="interests.eyebrow">06 / Centres d'Intérêt</p>
+          <h2 class="mt-1.5 text-3xl font-semibold dark:text-white text-[#0f2557] sm:text-4xl leading-[1.15]" data-i18n="interests.title">Équilibre & curiosité.</h2>
+          <p class="mt-1 max-w-2xl text-sm dark:text-zinc-300 text-black/80 leading-[1.2]" data-i18n="interests.desc">Des expériences qui nourrissent l’ouverture culturelle, l’aventure et la créativité.</p>
+        </div>
+
+        <div class="interests-mosaic mt-5">
+          <article class="interest-tile interest-tile--travel">
+            <span class="interest-image" style="background-image: url('assets/passion-voyage.jpg'); background-position: 75% center;"></span>
+            <div class="interest-copy">
+              <span class="interest-number" data-i18n="interests.i1_num">01 / MOBILITÉ</span>
+              <h3 class="mt-0.5 text-2xl font-semibold text-white" data-i18n="interests.i1_title">Voyages</h3>
+              <p class="mt-1 max-w-md text-sm leading-[1.2] text-zinc-200" data-i18n="interests.i1_desc">Ouverture culturelle & immersion 5 mois à Hanoï.</p>
+            </div>
+          </article>
+
+          <article class="interest-tile interest-tile--hike">
+            <span class="interest-image" style="background-image: url('assets/passion-randonnee.jpg'); background-position: center 35%;"></span>
+            <div class="interest-copy">
+              <span class="interest-number" data-i18n="interests.i2_num">02 / HORIZON</span>
+              <h3 class="mt-0.5 text-lg font-semibold text-white" data-i18n="interests.i2_title">Randonnée</h3>
+              <p class="mt-0.5 text-xs leading-[1.2] text-zinc-200" data-i18n="interests.i2_desc">Aventure et lieux atypiques.</p>
+            </div>
+          </article>
+
+          <article class="interest-tile interest-tile--adventure">
+            <span class="interest-image" style="background-image: url('assets/passion-montagne.jpg'); background-position: center 65%;"></span>
+            <div class="interest-copy">
+              <span class="interest-number" data-i18n="interests.i3_num">03 / EXPLORATION</span>
+              <h3 class="mt-0.5 text-lg font-semibold text-white" data-i18n="interests.i3_title">Plein air</h3>
+              <p class="mt-0.5 text-xs leading-[1.2] text-zinc-200" data-i18n="interests.i3_desc">Préparation & autonomie.</p>
+            </div>
+          </article>
+
+          <article class="interest-tile interest-tile--creation">
+            <video class="interest-video" autoplay loop muted playsinline poster="assets/passion-creation.jpg">
+              <source src="assets/passion-creation.mp4" type="video/mp4" />
+            </video>
+            <div class="interest-copy">
+              <span class="interest-number" data-i18n="interests.i4_num">04 / CRÉATION</span>
+              <h3 class="mt-0.5 text-2xl font-semibold text-white" data-i18n="interests.i4_title">Image & vidéo</h3>
+              <p class="mt-1 max-w-md text-sm leading-[1.2] text-zinc-200" data-i18n="interests.i4_desc">Montage DaVinci Resolve.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAPO 7 : SECTION 07 PARCOURS -->
+    <section id="journey" data-slide-title-fr="Parcours" data-slide-title-en="Education" data-slide-code="07" class="deck-slide is-next">
+      <div class="mx-auto max-w-5xl px-4 sm:px-6 w-full">
+        <div class="border-b dark:border-blue-800/75 border-[#0f2557]/25 pb-4 mb-9">
+          <p class="eyebrow font-mono text-xs uppercase tracking-[.18em] dark:text-blue-300 text-[#0f2557]" data-i18n="journey.eyebrow">07 / Parcours</p>
+          <h2 class="mt-1.5 text-3xl font-semibold dark:text-white text-[#0f2557] sm:text-4xl leading-[1.15]" data-i18n="journey.title">Un parcours orienté systèmes complexes.</h2>
+        </div>
+
+        <div class="relative pl-44 sm:pl-56 space-y-10">
+          <div class="absolute top-2 bottom-2 left-[167px] sm:left-[215px] w-0.5 dark:bg-blue-700/80 bg-[#0f2557]"></div>
+
+          <article class="relative group">
+            <div class="absolute -left-44 sm:-left-56 top-0 w-40 sm:w-48 flex flex-col items-end pr-4">
+              <span class="font-mono text-sm font-bold dark:text-blue-300 text-[#0f2557]">2024 — 2028</span>
+              <!-- Logo SIGMA : monochrome en mode Sombre, couleur complète en mode Clair -->
+              <img src="assets/logo-sigma.svg" alt="Logo SIGMA" class="hidden dark:block h-14 w-14 mt-1.5 rounded-xl object-contain" onerror="this.style.display='none';" />
+              <img src="assets/logo_sigma_color.svg" alt="Logo SIGMA" class="dark:hidden h-14 w-14 mt-1.5 rounded-xl object-contain" onerror="this.style.display='none';" />
+            </div>
+            <div class="absolute -left-[7px] top-2.5 h-4 w-4 rounded-full border-2 dark:border-blue-400 border-[#0f2557] dark:bg-blue-900 bg-[#0f2557] transition-transform group-hover:scale-125"></div>
+            <div class="rounded-2xl border dark:border-blue-800/65 border-[#0f2557]/30 bg-main-navy p-3.5 ml-3">
+              <h3 class="text-xl sm:text-2xl font-semibold dark:text-white text-[#0f2557]">SIGMA Clermont</h3>
+              <p class="mt-1 text-sm dark:text-zinc-300 text-black/80 leading-[1.2]" data-i18n="journey.item1_desc">Diplôme d'ingénieur en Mécanique · Spécialité Machines, Robots et Systèmes (MRS).</p>
+            </div>
+          </article>
+
+          <article class="relative group">
+            <div class="absolute -left-44 sm:-left-56 top-0 w-40 sm:w-48 flex flex-col items-end pr-4">
+              <span class="font-mono text-sm font-bold dark:text-blue-300 text-[#0f2557]">2026</span>
+              <img src="assets/logo-hust.jpg" alt="Logo HUST" class="h-14 w-14 mt-1.5 rounded-xl object-contain" onerror="this.style.display='none';" />
+            </div>
+            <div class="absolute -left-[7px] top-2.5 h-4 w-4 rounded-full border-2 dark:border-blue-400 border-[#0f2557] dark:bg-blue-900 bg-[#0f2557] transition-transform group-hover:scale-125"></div>
+            <div class="rounded-2xl border dark:border-blue-800/65 border-[#0f2557]/30 bg-main-navy p-3.5 ml-3">
+              <h3 class="text-xl sm:text-2xl font-semibold dark:text-white text-[#0f2557]" data-i18n="journey.item_hust_title">Hanoi University of Science and Technology · Vietnam</h3>
+              <p class="mt-1 text-sm dark:text-zinc-300 text-black/80 leading-[1.2]" data-i18n="journey.item_hust_desc">Stage Assistant Ingénieur R&D (5 mois) · Modélisation 6 DDL & Commande MPC / LQR.</p>
+            </div>
+          </article>
+
+          <article class="relative group">
+            <div class="absolute -left-44 sm:-left-56 top-0 w-40 sm:w-48 flex flex-col items-end pr-4">
+              <span class="font-mono text-sm font-bold dark:text-blue-300 text-[#0f2557]">2022 — 2024</span>
+              <img src="assets/logo-eiffel.png" alt="Logo Gustave Eiffel" class="h-16 w-16 mt-1.5 rounded-xl object-contain" onerror="this.style.display='none';" />
+            </div>
+            <div class="absolute -left-[7px] top-2.5 h-4 w-4 rounded-full border-2 dark:border-blue-400 border-[#0f2557] dark:bg-blue-900 bg-[#0f2557] transition-transform group-hover:scale-125"></div>
+            <div class="rounded-2xl border dark:border-blue-800/65 border-[#0f2557]/30 bg-main-navy p-3.5 ml-3">
+              <h3 class="text-xl sm:text-2xl font-semibold dark:text-white text-[#0f2557]" data-i18n="journey.item2_title">Lycée Gustave Eiffel · Bordeaux</h3>
+              <p class="mt-1 text-sm dark:text-zinc-300 text-black/80 leading-[1.2]" data-i18n="journey.item2_desc">Classes Préparatoires aux Grandes Écoles (CPGE) · PTSI / PT.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- DIAPO 8 : SECTION 08 CONTACT + CITATION EN DESSOUS DU FORMULAIRE -->
+    <section id="contact" data-slide-title-fr="Contact" data-slide-title-en="Contact" data-slide-code="08" class="deck-slide is-next">
+      <div class="mx-auto w-full max-w-7xl px-4 sm:px-6">
+        <div class="grid gap-8 lg:grid-cols-[.85fr_1.15fr] items-start">
+          <div>
+            <p class="eyebrow font-mono text-[10px] uppercase tracking-[.18em] dark:text-blue-300 text-[#0f2557]" data-i18n="contact.eyebrow">08 / Contact</p>
+            <h2 class="mt-2 text-3xl font-semibold dark:text-white text-[#0f2557] leading-[1.15]" data-i18n="contact.title">Échangeons sur une opportunité.</h2>
+            <p class="mt-2 text-xs sm:text-sm leading-[1.2] dark:text-zinc-300 text-black/80" data-i18n="contact.desc">
+              Je suis à la recherche d'un stage de fin d'études de 3 mois maximum à partir d'Avril 2027 en robotique, mécatronique ou ingénierie ferroviaire.
+            </p>
+            <div class="mt-6 space-y-3 font-mono text-xs">
+              <a href="mailto:alann.savy@sigma-clermont.fr" class="flex items-center gap-3 rounded-xl border dark:border-blue-800/75 border-[#0f2557]/40 bg-main-navy p-3 transition dark:hover:border-blue-400 hover:border-[#0f2557] hover:bg-[#0f2557] hover:text-white">
+                <i class="fa-solid fa-envelope text-sm dark:text-blue-400 text-[#0f2557]"></i>
+                <span>alann.savy@sigma-clermont.fr</span>
+              </a>
+              <a href="tel:+33614570826" class="flex items-center gap-3 rounded-xl border dark:border-blue-800/75 border-[#0f2557]/40 bg-main-navy p-3 transition dark:hover:border-blue-400 hover:border-[#0f2557] hover:bg-[#0f2557] hover:text-white">
+                <i class="fa-solid fa-phone text-sm dark:text-blue-400 text-[#0f2557]"></i>
+                <span>+33 6 14 57 08 26</span>
+              </a>
+              <a href="https://www.linkedin.com/in/alann-savy" target="_blank" rel="noreferrer" class="flex items-center gap-3 rounded-xl border dark:border-blue-800/75 border-[#0f2557]/40 bg-main-navy p-3 transition dark:hover:border-blue-400 hover:border-[#0f2557] hover:bg-[#0f2557] hover:text-white">
+                <i class="fa-brands fa-linkedin text-sm dark:text-blue-400 text-[#0f2557]"></i>
+                <span>linkedin.com/in/alann-savy</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="space-y-4">
+            <form id="contact-form" class="rounded-2xl border dark:border-blue-800/75 border-[#0f2557]/40 bg-main-navy p-5 space-y-3">
+              <h3 class="font-mono text-xs uppercase dark:text-blue-300 text-[#0f2557] font-semibold" data-i18n="contact.form_title">Envoyer un message</h3>
+              <div class="grid gap-3 sm:grid-cols-2">
+                <input required name="name" class="w-full rounded-xl border dark:border-blue-800/70 border-[#0f2557]/35 bg-main-navy px-3 py-2 text-xs outline-none dark:focus:border-blue-400 focus:border-[#0f2557] dark:text-white text-[#0f2557]" placeholder="Votre nom" data-i18n-ph="contact.ph_name" />
+                <input required type="email" name="email" class="w-full rounded-xl border dark:border-blue-800/70 border-[#0f2557]/35 bg-main-navy px-3 py-2 text-xs outline-none dark:focus:border-blue-400 focus:border-[#0f2557] dark:text-white text-[#0f2557]" placeholder="Votre e-mail" data-i18n-ph="contact.ph_email" />
+              </div>
+              <input required name="subject" class="w-full rounded-xl border dark:border-blue-800/70 border-[#0f2557]/35 bg-main-navy px-3 py-2 text-xs outline-none dark:focus:border-blue-400 focus:border-[#0f2557] dark:text-white text-[#0f2557]" placeholder="Objet du message" data-i18n-ph="contact.ph_subject" />
+              <textarea required name="message" rows="3" class="w-full rounded-xl border dark:border-blue-800/70 border-[#0f2557]/35 bg-main-navy px-3 py-2 text-xs outline-none dark:focus:border-blue-400 focus:border-[#0f2557] dark:text-white text-[#0f2557]" placeholder="Votre message..." data-i18n-ph="contact.ph_msg"></textarea>
+              <div class="flex items-center justify-between gap-3 pt-1">
+                <button type="submit" class="rounded-xl dark:bg-blue-700 bg-[#0f2557] px-5 py-2.5 font-mono text-xs font-bold uppercase text-white transition dark:hover:bg-blue-600 dark:shadow-[0_8px_20px_rgba(29,78,216,0.4)] hover:bg-black" data-i18n="contact.btn_send">
+                  Préparer l'e-mail ↗
+                </button>
+                <button type="button" onclick="goToSlide(0)" class="font-mono text-xs dark:text-zinc-300 text-[#0f2557] hover:underline" data-i18n="footer.top">
+                  Haut de page ↑
+                </button>
+              </div>
+            </form>
+
+            <!-- CITATION EN DESSOUS DU FORMULAIRE DE CONTACT -->
+            <p class="text-sm sm:text-base font-normal leading-[1.2] text-right dark:text-white text-[#0f2557]">
+              "the universe doesn t give you more than you can handle"
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODALES INTERACTIVES -->
+
+  <!-- Modal Drone Quadricoptère (HUST) -->
+  <div id="modal-drone" class="modal-backdrop fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="max-w-3xl w-full rounded-2xl border dark:border-blue-700/85 border-[#0f2557] bg-main-navy p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <button type="button" onclick="closeModal('modal-drone')" class="absolute top-4 right-4 opacity-70 hover:opacity-100 text-xl z-20">&times;</button>
+      <span class="font-mono text-xs uppercase dark:text-blue-300 text-[#0f2557] font-semibold" data-i18n="modal.drone_tag">R&D Laboratoire HUST · Stage 2A</span>
+      <h3 class="text-2xl font-semibold dark:text-white text-[#0f2557] mt-1" data-i18n="modal.drone_title">Drone Quadricoptère 6-DDL & Contrôle Avancé</h3>
+
+      <div class="mt-4 relative rounded-xl bg-main-navy border dark:border-blue-800/75 border-[#0f2557]/30 overflow-hidden">
+        <div class="relative h-64 sm:h-80 w-full flex items-center justify-center overflow-hidden">
+          <img id="bg-drone" src="assets/Drone.jpg" class="absolute inset-0 h-full w-full object-cover scale-125 blur-xl opacity-40" alt="" />
+          <img id="img-drone" src="assets/Drone.jpg" class="relative z-10 h-full w-full object-contain transition-all duration-300" data-i18n-alt="modal.drone_img_alt" alt="Banc d'essai Drone HUST" />
+        </div>
+        <button type="button" onclick="prevSlide('drone')" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-main-navy border dark:border-blue-400/70 border-[#0f2557] dark:text-white text-[#0f2557] hover:bg-[#0f2557] hover:text-white w-8 h-8 rounded-full flex items-center justify-center font-mono font-bold transition">‹</button>
+        <button type="button" onclick="nextSlide('drone')" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-main-navy border dark:border-blue-400/70 border-[#0f2557] dark:text-white text-[#0f2557] hover:bg-[#0f2557] hover:text-white w-8 h-8 rounded-full flex items-center justify-center font-mono font-bold transition">›</button>
+        <div id="caption-drone" class="bg-main-navy p-2 text-center font-mono text-[11px] dark:text-blue-300 text-[#0f2557] border-t dark:border-blue-800/70 border-[#0f2557]/20">
+          Photo 1/1: Banc de test sol & prototype drone quadrirotor HUST
+        </div>
+      </div>
+
+      <div class="mt-6 space-y-4 text-xs leading-[1.25] dark:text-zinc-300 text-black">
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.drone_s1_h">Modélisation & Linéarisation (12 variables d'état)</h4>
+          <p data-i18n="modal.drone_s1_p">Établissement du modèle dynamique non linéaire complet par les équations de Newton-Euler. Linéarisation autour du vol stationnaire et discrétisation exacte par la méthode de Van Loan sans fonction native (série de Taylor à l'ordre 12), tirant parti de la nilpotence de la matrice augmentée.</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.drone_s2_h">Synthèse & Benchmark des Lois de Commande</h4>
+          <p data-i18n="modal.drone_s2_p">Développement et évaluation comparative sur 4 scénarios de vol : PID cascade, LQR discret (réglé par la règle de Bryson et itération de l'équation de Riccati) et Commande Prédictive MPC. Le MPC intègre des contraintes d'actionneurs (Poussée 0-200 N, Couples ±2 N·m) et de sécurité sur l'attitude (±20°).</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.drone_s3_h">Solveur Active-Set Temps Réel</h4>
+          <p data-i18n="modal.drone_s3_p">Programmation de A à Z (from scratch) d'un solveur de programmation quadratique (QP) primale à ensemble actif. Garantie de faisabilité permanente via la relaxation quadratique des contraintes d'attitude et limitation stricte du temps de calcul (budget 5 ms) pour garantir une exécution en temps réel.</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.drone_s4_h">Résultats Clés</h4>
+          <p class="font-mono font-medium dark:text-white text-[#0f2557]" data-i18n="modal.drone_s4_p">Le MPC réduit l'erreur de position (RMSE) de 70% par rapport au PID et de 41% par rapport au LQR. Seul le MPC surmonte le scénario d'évitement rapide sans divergence d'attitude.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Hexapode & CAO (SIGMA Clermont) -->
+  <div id="modal-hexapode" class="modal-backdrop fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="max-w-3xl w-full rounded-2xl border dark:border-blue-700/85 border-[#0f2557] bg-main-navy p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <button type="button" onclick="closeModal('modal-hexapode')" class="absolute top-4 right-4 opacity-70 hover:opacity-100 text-xl z-20">&times;</button>
+      <span class="font-mono text-xs uppercase dark:text-blue-300 text-[#0f2557] font-semibold" data-i18n="modal.hexa_tag">Projet Ingénieur S8 · SIGMA Clermont</span>
+      <h3 class="text-2xl font-semibold dark:text-white text-[#0f2557] mt-1" data-i18n="modal.hexa_title">Simulateur d'Avion à Pédale & Plateforme Hexapode</h3>
+
+      <div class="mt-4 relative rounded-xl bg-main-navy border dark:border-blue-800/75 border-[#0f2557]/30 overflow-hidden">
+        <div class="relative h-64 sm:h-80 w-full flex items-center justify-center overflow-hidden">
+          <img id="bg-hexapode" src="assets/Hexapode2.jpg" class="absolute inset-0 h-full w-full object-cover scale-125 blur-xl opacity-40" alt="" />
+          <img id="img-hexapode" src="assets/Hexapode2.jpg" class="relative z-10 h-full w-full object-contain transition-all duration-300" data-i18n-alt="modal.hexa_img_alt" alt="Simulateur Hexapode complet" />
+        </div>
+        <button type="button" onclick="prevSlide('hexapode')" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-main-navy border dark:border-blue-400/70 border-[#0f2557] dark:text-white text-[#0f2557] hover:bg-[#0f2557] hover:text-white w-8 h-8 rounded-full flex items-center justify-center font-mono font-bold transition">‹</button>
+        <button type="button" onclick="nextSlide('hexapode')" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-main-navy border dark:border-blue-400/70 border-[#0f2557] dark:text-white text-[#0f2557] hover:bg-[#0f2557] hover:text-white w-8 h-8 rounded-full flex items-center justify-center font-mono font-bold transition">›</button>
+        <div id="caption-hexapode" class="bg-main-navy p-2 text-center font-mono text-[11px] dark:text-blue-300 text-[#0f2557] border-t dark:border-blue-800/70 border-[#0f2557]/20">
+          Photo 1/7: Vue latérale du simulateur assemblé en atelier
+        </div>
+      </div>
+
+      <div class="mt-6 space-y-4 text-xs leading-[1.25] dark:text-zinc-300 text-black">
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.hexa_s1_h">Conception CAO 3D & Modularité (CATIA V5)</h4>
+          <p data-i18n="modal.hexa_s1_p">Conception sous CATIA V5 d'une structure modulaire à double plaque permettant le basculement rapide entre la configuration "Avion de chasse" et "Avion à pédales (DaSH)". Fabrication sur mesure par découpe laser des plaques de renfort acier 4mm, des poignées de maintien latérales et d'un boîtier de pédalier inédit usiné sur mesure.</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.hexa_s2_h">Intégration Télémétrie & Chaîne de Transmission</h4>
+          <p data-i18n="modal.hexa_s2_p">Intégration d'un Home Trainer connecté Wahoo KICKR dans le cadre cubique inférieur. Développement de scripts Python tirant parti des bibliothèques <code>bleak</code> (Bluetooth Low Energy / FTMS) et <code>SimConnect</code> pour transmettre la puissance développée par le pilote directement à la manette des gaz de MSFS 2020.</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.hexa_s3_h">Asservissement de la Plateforme Dynamique</h4>
+          <p data-i18n="modal.hexa_s3_p">Couplage de la télémétrie de MSFS 2020 avec la plateforme Stewart 6 vérins via FlyPT Mover. Implémentation d'un filtrage de type Rate Washout (RWASH) pour simuler la sensation de force continue en virage tout en ramenant la plateforme à son point neutre de manière imperceptible.</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.hexa_s4_h">Outils & Fabrication</h4>
+          <p class="font-mono font-medium dark:text-white text-[#0f2557]" data-i18n="modal.hexa_s4_p">CATIA V5, Découpe Laser Acier/Bois, Python (SimConnect/Bleak), FlyPT Mover, MSFS 2020, Bluetooth FTMS.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Le Retourneur -->
+  <div id="modal-retourneur" class="modal-backdrop fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="max-w-3xl w-full rounded-2xl border dark:border-blue-700/85 border-[#0f2557] bg-main-navy p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <button type="button" onclick="closeModal('modal-retourneur')" class="absolute top-4 right-4 opacity-70 hover:opacity-100 text-xl z-20">&times;</button>
+      <span class="font-mono text-xs uppercase dark:text-blue-300 text-[#0f2557] font-semibold" data-i18n="modal.ret_tag">Projet Ingénieur S06 (1A) · SIGMA Clermont</span>
+      <h3 class="text-2xl font-semibold dark:text-white text-[#0f2557] mt-1" data-i18n="modal.ret_title">Robot Trieur de Pièces « Le Retourneur »</h3>
+
+      <div class="mt-4 relative rounded-xl bg-main-navy border dark:border-blue-800/75 border-[#0f2557]/30 overflow-hidden">
+        <div class="relative h-64 sm:h-80 w-full flex items-center justify-center overflow-hidden">
+          <img id="bg-retourneur" src="assets/Projet1A.jpg" class="absolute inset-0 h-full w-full object-cover scale-125 blur-xl opacity-40" alt="" />
+          <img id="img-retourneur" src="assets/Projet1A.jpg" class="relative z-10 h-full w-full object-contain transition-all duration-300" data-i18n-alt="modal.ret_img_alt" alt="Vue du système final Le Retourneur" />
+        </div>
+        <button type="button" onclick="prevSlide('retourneur')" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-main-navy border dark:border-blue-400/70 border-[#0f2557] dark:text-white text-[#0f2557] hover:bg-[#0f2557] hover:text-white w-8 h-8 rounded-full flex items-center justify-center font-mono font-bold transition">‹</button>
+        <button type="button" onclick="nextSlide('retourneur')" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-main-navy border dark:border-blue-400/70 border-[#0f2557] dark:text-white text-[#0f2557] hover:bg-[#0f2557] hover:text-white w-8 h-8 rounded-full flex items-center justify-center font-mono font-bold transition">›</button>
+        <div id="caption-retourneur" class="bg-main-navy p-2 text-center font-mono text-[11px] dark:text-blue-300 text-[#0f2557] border-t dark:border-blue-800/70 border-[#0f2557]/20">
+          Photo 1/3: Ensemble mécatronique final assemblé sur socle
+        </div>
+      </div>
+
+      <div class="mt-6 space-y-4 text-xs leading-[1.25] dark:text-zinc-300 text-black">
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.ret_s1_h">Architecture Mécanique & Guidage Précis</h4>
+          <p data-i18n="modal.ret_s1_p">Conception d'un chariot mobile guidé selon l'axe Y via une coulisse à billes à sortie partielle (supportant plus de 40 kg). La translation est entraînée par un moteur pas-à-pas (3 N.m) et une roue à pneu caoutchouc MakeBlock (D=16mm). Le socle a été découpé au laser dans du bois au FabLab.</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.ret_s2_h">Pivotement du Bras & Système de Préhension</h4>
+          <p data-i18n="modal.ret_s2_p">Rotation du bras réalisée par un moteur à courant continu (couple nominal de 3,5 N.m) via un accouplement élastique sur un arbre fileté M8. La pince articulée intègre des prolongements en profilés aluminium recouverts de caoutchouc sur-mesure pour maximiser la surface d'adhérence et éviter le glissement des pièces métalliques.</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.ret_s3_h">Reconnaissance de Couleur TCS3200 & Programme Arduino</h4>
+          <p data-i18n="modal.ret_s3_p">Intégration d'un capteur optique TCS3200 sur un support déporté afin d'analyser la signature chromatique des objets (Bleu, Blanc, Rouge) sous éclairage LED contrôlé. Pilotage par carte Arduino Uno avec séquencement en boucle fermée et gestion temporelle des mouvements.</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.ret_s4_h">Éco-conception & Budget</h4>
+          <p class="font-mono font-medium dark:text-white text-[#0f2557]" data-i18n="modal.ret_s4_p">Budget total optimisé de 123,61 € grâce à l'utilisation maximale de pièces recyclées et de chutes de bois au FabLab. Bilan carbone maîtrisé (&lt; 0,5 t eqCO2).</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Préhenseur Souple -->
+  <div id="modal-prehenseur" class="modal-backdrop fixed inset-0 z-50 hidden bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="max-w-3xl w-full rounded-2xl border dark:border-blue-700/85 border-[#0f2557] bg-main-navy p-6 sm:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+      <button type="button" onclick="closeModal('modal-prehenseur')" class="absolute top-4 right-4 opacity-70 hover:opacity-100 text-xl z-20">&times;</button>
+      <span class="font-mono text-xs uppercase dark:text-blue-300 text-[#0f2557] font-semibold" data-i18n="modal.pre_tag">Octobre 2026 - En cours · SIGMA Clermont</span>
+      <h3 class="text-2xl font-semibold dark:text-white text-[#0f2557] mt-1" data-i18n="modal.pre_title">Étude de conception et réalisation d'un préhenseur souple</h3>
+
+      <div class="mt-4 relative rounded-xl bg-main-navy border dark:border-blue-800/75 border-[#0f2557]/30 overflow-hidden">
+        <div class="relative h-64 sm:h-80 w-full flex items-center justify-center overflow-hidden">
+          <img id="bg-prehenseur" src="assets/Prehenseur.jpg" class="absolute inset-0 h-full w-full object-cover scale-125 blur-xl opacity-40" alt="" />
+          <img id="img-prehenseur" src="assets/Prehenseur.jpg" class="relative z-10 h-full w-full object-contain transition-all duration-300" data-i18n-alt="modal.pre_img_alt" alt="Prototype du préhenseur souple" />
+        </div>
+        <button type="button" onclick="prevSlide('prehenseur')" class="absolute left-2 top-1/2 -translate-y-1/2 z-20 bg-main-navy border dark:border-blue-400/70 border-[#0f2557] dark:text-white text-[#0f2557] hover:bg-[#0f2557] hover:text-white w-8 h-8 rounded-full flex items-center justify-center font-mono font-bold transition">‹</button>
+        <button type="button" onclick="nextSlide('prehenseur')" class="absolute right-2 top-1/2 -translate-y-1/2 z-20 bg-main-navy border dark:border-blue-400/70 border-[#0f2557] dark:text-white text-[#0f2557] hover:bg-[#0f2557] hover:text-white w-8 h-8 rounded-full flex items-center justify-center font-mono font-bold transition">›</button>
+        <div id="caption-prehenseur" class="bg-main-navy p-2 text-center font-mono text-[11px] dark:text-blue-300 text-[#0f2557] border-t dark:border-blue-800/70 border-[#0f2557]/20">
+          Photo 1/3: Prototypes de préhenseur souple imprimés en 3D
+        </div>
+      </div>
+
+      <div class="mt-6 space-y-4 text-xs leading-[1.25] dark:text-zinc-300 text-black">
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.pre_s1_h">Architecture & Choix du Matériau</h4>
+          <p data-i18n="modal.pre_s1_p">Étude comparative et revue de littérature sur les structures de robotique souple (Soft Robotics). Sélection de l'architecture géométrique et caractérisation des matériaux polymères/élastomères adaptés à la manipulation d'objets fragiles.</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.pre_s2_h">Dimensionnement FEA & Automatisation PyMechanical</h4>
+          <p data-i18n="modal.pre_s2_p">Modélisation CAO paramétrique sous CATIA. Calcul par éléments finis des déformations non-linéaires sous ANSYS FEA. Automatisation des campagnes d'optimisation topologique et de dimensionnement via des scripts Python (PyMechanical).</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.pre_s3_h">Impression 3D & Validation Expérimentale</h4>
+          <p data-i18n="modal.pre_s3_p">Fabrication des prototypes par fabrication additive (impression 3D TPU). Banc d'essai expérimental pour mesurer les forces de préhension et la capacité de déformation.</p>
+        </div>
+        <div>
+          <h4 class="font-mono dark:text-blue-300 text-[#0f2557] uppercase font-semibold" data-i18n="modal.pre_s4_h">Technologies Clés</h4>
+          <p class="font-mono font-medium dark:text-white text-[#0f2557]" data-i18n="modal.pre_s4_p">CATIA V5, ANSYS FEA, PyMechanical, Python, Soft Robotics, Impression 3D TPU.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    const slides = Array.from(document.querySelectorAll(".deck-slide"));
+    let currentSlideIndex = 0;
+    let isSlideTransitioning = false;
+
+    const slideLabelEl = document.getElementById("current-slide-label");
+    const slideCounterEl = document.getElementById("slide-counter");
+    const dropdownBtn = document.getElementById("sections-dropdown-btn");
+    const dropdownPanel = document.getElementById("sections-dropdown-panel");
+    const dropdownChevron = document.getElementById("sections-chevron");
+    const dropdownList = document.getElementById("sections-dropdown-list");
+
+    const i18n = {
+      fr: {
+        "nav.home_aria": "Accueil",
+        "nav.prev_slide": "Diapo précédente",
+        "nav.next_slide": "Diapo suivante",
+        "nav.lang_title": "Passer en anglais",
+        "nav.theme_title": "Changer le thème",
+        "dropdown.title": "Bandeau de navigation · Sélectionner une diapositive",
+        "dropdown.hint": "Molette / Flèches ↑ ↓ pour défiler verticalement",
+        "hero.eyebrow": "Portfolio · Élève-Ingénieur Mécanique / MRS",
+        "hero.photo_alt": "Photo de profil d'Alann Savy",
+        "hero.subtitle": "Machines, Robots et Systèmes @ SIGMA Clermont",
+        "hero.desc": "Étudiant ingénieur en mécanique, je combine modélisation, automatique multivariable et simulation pour concevoir des systèmes mécatroniques complexes — avec un intérêt affirmé pour la robotique et le ferroviaire.",
+        "hero.domains": "Robotics · Mechatronics · Simulation · Control Engineering · Rail Systems",
+        "hero.btn_projects": "Découvrir les projets ↘",
+        "profil.eyebrow": "01 / Présentation & Profil",
+        "profil.title": "Conception, Automatique & Vision Globale.",
+        "profil.subtitle": "Élève-ingénieur en Mécanique à SIGMA Clermont, spécialisé en Machines, Robots et Systèmes (MRS).",
+        "profil.bio_p1": "Passionné par l'innovation technologique et la conception de systèmes complexes, je suis étudiant en cycle ingénieur mécanique, spécialité <strong class=\"dark:text-blue-300 text-[#0f2557] font-semibold\">« Machines, Robots et Systèmes »</strong>, à <strong class=\"dark:text-white text-[#0f2557] font-semibold\">SIGMA Clermont</strong>. J'ai un attrait particulier pour les défis techniques liés à la robotique autonome, aux systèmes embarqués et à l'industrie ferroviaire.",
+        "profil.bio_p2": "Au fil de mon cursus, j'ai consolidé mes compétences en conception 3D (<span class=\"font-mono font-medium dark:text-blue-300 text-[#0f2557]\">CATIA V5</span>, <span class=\"font-mono font-medium dark:text-blue-300 text-[#0f2557]\">3DEXPERIENCE</span>), calcul par éléments finis (<span class=\"font-mono font-medium dark:text-blue-300 text-[#0f2557]\">ANSYS</span>) et commande/simulation (<span class=\"font-mono font-medium dark:text-blue-300 text-[#0f2557]\">Python</span>, <span class=\"font-mono font-medium dark:text-blue-300 text-[#0f2557]\">MATLAB / Simulink</span>), que j'ai appliquées sur des projets concrets allant du prototype mécatronique au simulateur dynamique.",
+        "profil.bio_p3": "Mon expérience d'assistant ingénieur en recherche à l'<strong class=\"dark:text-white text-[#0f2557] font-semibold\">Université Polytechnique de Hanoï (HUST)</strong> a renforcé mon expertise en modélisation 6 DDL et lois de commande avancées (LQR, MPC), tout en développant mon adaptabilité au sein d'une équipe internationale.",
+        "profil.bio_p4": "En parallèle, mes engagements associatifs (Co-président de l'<strong class=\"dark:text-white text-[#0f2557] font-semibold\">International Team SIGMA</strong> et Président de la <strong class=\"dark:text-white text-[#0f2557] font-semibold\">SIGMA Boutique</strong>) ainsi que mes années d'encadrement BAFA m'ont permis de conjuguer rigueur d'ingénieur, sens du pilotage et leadership humain.",
+        "profil.avail_title": "Objectif & Disponibilité Stage",
+        "profil.avail_desc": "À la recherche d'un stage de fin d'études (3 mois maximum) à partir d'<strong class=\"dark:text-white text-[#0f2557]\">Avril 2027</strong> en robotique, mécatronique ou ingénierie ferroviaire.",
+        "profil.p1_tag": "01 / CAO & MÉCANIQUE",
+        "profil.p1_title": "Conception & Modélisation 3D",
+        "profil.p1_desc": "CATIA V5, 3DEXPERIENCE, mises en plan 2D, cotation ISO, dossiers de fabrication.",
+        "profil.p2_tag": "02 / AUTOMATIQUE & ROBOTIQUE",
+        "profil.p2_title": "Robotique & Commandes Avancées",
+        "profil.p2_desc": "Cinématique/Dynamique 6 DDL, PID cascade, LQR discret, MPC temps réel.",
+        "profil.p3_tag": "03 / SIMULATION & CALCULS",
+        "profil.p3_title": "Simulation Numérique & FEA",
+        "profil.p3_desc": "MATLAB / Simulink, éléments finis ANSYS FEA, calculs fréquentiels et dynamiques.",
+        "profil.p4_tag": "04 / MANAGEMENT & SYSTÈMES",
+        "profil.p4_title": "Ingénierie Système & Management",
+        "profil.p4_desc": "SysML, AMDEC, gestion de projet, pilotage budgétaire, communication interculturelle.",
+        "exp.eyebrow": "02 / Expériences Professionnelles",
+        "exp.title": "R&D, Recherche & Activités Terrain",
+        "exp.main_lab": "Laboratoire d'aéronautique · HUST (Hanoï, Vietnam)",
+        "exp.main_role": "Assistant Ingénieur en laboratoire — Drone Quadricoptère",
+        "exp.main_date": "Mai — Sept. 2026 · 5 mois",
+        "exp.details_btn": "Voir détails ↗",
+        "exp.main_desc": "Modélisation non linéaire d'un quadricoptère à 6 DDL (12 variables d'état). Conception, implémentation et comparaison de trois architectures de commande en boucle fermée : PID cascade, LQR discret et MPC avec solveur Active-Set codé from scratch.",
+        "exp.tag_control": "Commande LQR / MPC",
+        "exp.tag_model": "Modélisation 6 DDL",
+        "exp.comp_header": "Expériences professionnelles complémentaires",
+        "exp.comp1_date": "2022 — 2024",
+        "exp.comp1_title": "Animateur BAFA / Encadrement de Jeunesse",
+        "exp.comp1_desc": "Gestion de groupe, responsabilité de la sécurité, adaptabilité et capacité d'adaptation sur le terrain.",
+        "projects.eyebrow": "03 / Projets Sélectionnés",
+        "projects.title": "Concevoir. Modéliser. Évaluer.",
+        "projects.hint": "Cliquez sur un projet pour ouvrir la galerie et les détails.",
+        "projects.p1_alt": "Projet Drone Quadricoptère",
+        "projects.p1_fallback": "Simulations 6 DDL",
+        "projects.p1_title": "Modélisation & Contrôle d'un Quadricoptère",
+        "projects.p1_desc": "Modèle 6 DDL, Van Loan, solveur Active-Set temps réel et benchmark (PID, LQR, MPC).",
+        "projects.p2_alt": "Projet Hexapode CAO",
+        "projects.p2_fallback": "Simulateur Hexapode",
+        "projects.p2_title": "Simulateur Avion & Plateforme Hexapode",
+        "projects.p2_desc": "Conception CATIA V5, boîtier usiné, télémétrie BLE/SimConnect MSFS 2020.",
+        "projects.p3_alt": "Projet Robot Le Retourneur",
+        "projects.p3_fallback": "Robot Trieur",
+        "projects.p3_title": "Robot Trieur « Le Retourneur »",
+        "projects.p3_desc": "Robot autonome sur glissière à billes, détection TCS3200 et Arduino Uno.",
+        "projects.p4_alt": "Projet Préhenseur Souple",
+        "projects.p4_fallback": "Préhenseur Souple",
+        "projects.p4_badge": "Oct. 2026 - En cours",
+        "projects.p4_title": "Préhenseur Souple (Soft Robotics)",
+        "projects.p4_desc": "CAO paramétrique, FEA ANSYS, PyMechanical, impression 3D TPU et essais.",
+        "projects.preview_btn": "Aperçu ↗",
+        "skills.eyebrow": "04 / Compétences & Outils",
+        "skills.title": "Savoir-faire Technique & Qualités",
+        "skills.sub1": "Environnements Logiciels & Outils",
+        "skills.t1_sub": "Simulink / Onramp",
+        "skills.t2_sub": "Simulation & Scripts",
+        "skills.t3_sub": "CAO 3D & Plans 2D",
+        "skills.t4_sub": "FEA & PyMechanical",
+        "skills.t5_sub": "Bases de données",
+        "skills.s1_title": "Rigueur & Méthode",
+        "skills.s1_desc": "Rédaction de cahiers des charges, tolérancement et respect des jalons.",
+        "skills.s2_title": "Ouverture Interculturelle",
+        "skills.s2_desc": "Mobilité 5 mois au Vietnam (HUST) & Co-présidence International Team.",
+        "skills.s3_title": "Gestion d'Équipe",
+        "skills.s3_desc": "Encadrement d'équipe et pilotage budgétaire à la SIGMA Boutique.",
+        "skills.s4_title": "Esprit Collaboratif",
+        "skills.s4_desc": "Coopération fluide entre mécaniciens, automaticiens et informaticiens.",
+        "engagements.eyebrow": "05 / Un manager dans l'âme",
+        "engagements.title": "Manager par engagement, leader par expérience",
+        "engagements.c1_cap": "Président de SIGMA Boutique",
+        "engagements.c2_cap": "Welcome Day des étudiants internationaux",
+        "engagements.c3_cap": "Organisation d'activités de cohésion",
+        "engagements.c4_cap": "Animation et management d'équipes",
+        "engagements.r1_title": "Président SIGMA Boutique (2025-2026)",
+        "engagements.r1_desc": "Gestion budgétaire, négociation fournisseurs, encadrement d'équipe.",
+        "engagements.r2_title": "Co-président International Team (2025-2026)",
+        "engagements.r2_desc": "Accueil des internationaux, organisation d'événements, coordination bénévoles.",
+        "engagements.r3_title": "Animateur BAFA (2022-2024)",
+        "engagements.r3_desc": "Encadrement de groupe, prise de décision rapide et cohésion d'équipe sur le terrain.",
+        "engagements.summary": "Mon expérience du management allie l'animation terrain BAFA et la direction d'associations étudiantes : encadrer, adapter, piloter des budgets et fédérer des équipes vers des objectifs communs.",
+        "interests.eyebrow": "06 / Centres d'Intérêt",
+        "interests.title": "Équilibre & curiosité.",
+        "interests.desc": "Des expériences qui nourrissent l’ouverture culturelle, l’aventure et la créativité.",
+        "interests.i1_num": "01 / MOBILITÉ",
+        "interests.i1_title": "Voyages",
+        "interests.i1_desc": "Ouverture culturelle & immersion 5 mois à Hanoï.",
+        "interests.i2_num": "02 / HORIZON",
+        "interests.i2_title": "Randonnée",
+        "interests.i2_desc": "Aventure et lieux atypiques.",
+        "interests.i3_num": "03 / EXPLORATION",
+        "interests.i3_title": "Plein air",
+        "interests.i3_desc": "Préparation & autonomie.",
+        "interests.i4_num": "04 / CRÉATION",
+        "interests.i4_title": "Image & vidéo",
+        "interests.i4_desc": "Montage DaVinci Resolve.",
+        "journey.eyebrow": "07 / Parcours",
+        "journey.title": "Un parcours orienté systèmes complexes.",
+        "journey.item1_desc": "Diplôme d'ingénieur en Mécanique · Spécialité Machines, Robots et Systèmes (MRS).",
+        "journey.item_hust_title": "Université des Sciences et Technologies de Hanoï · Vietnam",
+        "journey.item_hust_desc": "Stage Assistant Ingénieur R&D (5 mois) · Modélisation 6 DDL & Commande MPC / LQR.",
+        "journey.item2_title": "Lycée Gustave Eiffel · Bordeaux",
+        "journey.item2_desc": "Classes Préparatoires aux Grandes Écoles (CPGE) · PTSI / PT.",
+        "contact.eyebrow": "08 / Contact",
+        "contact.title": "Échangeons sur une opportunité.",
+        "contact.desc": "Je suis à la recherche d'un stage de fin d'études de 3 mois maximum à partir d'Avril 2027 en robotique, mécatronique ou ingénierie ferroviaire.",
+        "contact.form_title": "Envoyer un message",
+        "contact.ph_name": "Votre nom",
+        "contact.ph_email": "Votre e-mail",
+        "contact.ph_subject": "Objet du message",
+        "contact.ph_msg": "Votre message...",
+        "contact.btn_send": "Préparer l'e-mail ↗",
+        "footer.top": "Haut de page ↑",
+        "carousel.prev_img": "Image précédente",
+        "carousel.next_img": "Image suivante",
+        "modal.drone_tag": "R&D Laboratoire HUST · Stage 2A",
+        "modal.drone_title": "Drone Quadricoptère 6-DDL & Contrôle Avancé",
+        "modal.drone_img_alt": "Banc d'essai Drone HUST",
+        "modal.drone_s1_h": "Modélisation & Linéarisation (12 variables d'état)",
+        "modal.drone_s1_p": "Établissement du modèle dynamique non linéaire complet par les équations de Newton-Euler. Linéarisation autour du vol stationnaire et discrétisation exacte par la méthode de Van Loan sans fonction native (série de Taylor à l'ordre 12), tirant parti de la nilpotence de la matrice augmentée.",
+        "modal.drone_s2_h": "Synthèse & Benchmark des Lois de Commande",
+        "modal.drone_s2_p": "Développement et évaluation comparative sur 4 scénarios de vol : PID cascade, LQR discret (réglé par la règle de Bryson et itération de l'équation de Riccati) et Commande Prédictive MPC. Le MPC intègre des contraintes d'actionneurs (Poussée 0-200 N, Couples ±2 N·m) et de sécurité sur l'attitude (±20°).",
+        "modal.drone_s3_h": "Solveur Active-Set Temps Réel",
+        "modal.drone_s3_p": "Programmation de A à Z (from scratch) d'un solveur de programmation quadratique (QP) primale à ensemble actif. Garantie de faisabilité permanente via la relaxation quadratique des contraintes d'attitude et limitation stricte du temps de calcul (budget 5 ms) pour garantir une exécution en temps réel.",
+        "modal.drone_s4_h": "Résultats Clés",
+        "modal.drone_s4_p": "Le MPC réduit l'erreur de position (RMSE) de 70% par rapport au PID et de 41% par rapport au LQR. Seul le MPC surmonte le scénario d'évitement rapide sans divergence d'attitude.",
+        "modal.hexa_tag": "Projet Ingénieur S8 · SIGMA Clermont",
+        "modal.hexa_title": "Simulateur d'Avion à Pédale & Plateforme Hexapode",
+        "modal.hexa_img_alt": "Simulateur Hexapode complet",
+        "modal.hexa_s1_h": "Conception CAO 3D & Modularité (CATIA V5)",
+        "modal.hexa_s1_p": "Conception sous CATIA V5 d'une structure modulaire à double plaque permettant le basculement rapide entre la configuration \"Avion de chasse\" et \"Avion à pédales (DaSH)\". Fabrication sur mesure par découpe laser des plaques de renfort acier 4mm, des poignées de maintien latérales et d'un boîtier de pédalier inédit usiné sur mesure.",
+        "modal.hexa_s2_h": "Intégration Télémétrie & Chaîne de Transmission",
+        "modal.hexa_s2_p": "Intégration d'un Home Trainer connecté Wahoo KICKR dans le cadre cubique inférieur. Développement de scripts Python tirant parti des bibliothèques <code>bleak</code> (Bluetooth Low Energy / FTMS) et <code>SimConnect</code> pour transmettre la puissance développée par le pilote directement à la manette des gaz de MSFS 2020.",
+        "modal.hexa_s3_h": "Asservissement de la Plateforme Dynamique",
+        "modal.hexa_s3_p": "Couplage de la télémétrie de MSFS 2020 avec la plateforme Stewart 6 vérins via FlyPT Mover. Implémentation d'un filtrage de type Rate Washout (RWASH) pour simuler la sensation de force continue en virage tout en ramenant la plateforme à son point neutre de manière imperceptible.",
+        "modal.hexa_s4_h": "Outils & Fabrication",
+        "modal.hexa_s4_p": "CATIA V5, Découpe Laser Acier/Bois, Python (SimConnect/Bleak), FlyPT Mover, MSFS 2020, Bluetooth FTMS.",
+        "modal.ret_tag": "Projet Ingénieur S06 (1A) · SIGMA Clermont",
+        "modal.ret_title": "Robot Trieur de Pièces « Le Retourneur »",
+        "modal.ret_img_alt": "Vue du système final Le Retourneur",
+        "modal.ret_s1_h": "Architecture Mécanique & Guidage Précis",
+        "modal.ret_s1_p": "Conception d'un chariot mobile guidé selon l'axe Y via une coulisse à billes à sortie partielle (supportant plus de 40 kg). La translation est entraînée par un moteur pas-à-pas (3 N.m) et une roue à pneu caoutchouc MakeBlock (D=16mm). Le socle a été découpé au laser dans du bois au FabLab.",
+        "modal.ret_s2_h": "Pivotement du Bras & Système de Préhension",
+        "modal.ret_s2_p": "Rotation du bras réalisée par un moteur à courant continu (couple nominal de 3,5 N.m) via un accouplement élastique sur un arbre fileté M8. La pince articulée intègre des prolongements en profilés aluminium recouverts de caoutchouc sur-mesure pour maximiser la surface d'adhérence et éviter le glissement des pièces métalliques.",
+        "modal.ret_s3_h": "Reconnaissance de Couleur TCS3200 & Programme Arduino",
+        "modal.ret_s3_p": "Intégration d'un capteur optique TCS3200 sur un support déporté afin d'analyser la signature chromatique des objets (Bleu, Blanc, Rouge) sous éclairage LED contrôlé. Pilotage par carte Arduino Uno avec séquencement en boucle fermée et gestion temporelle des mouvements.",
+        "modal.ret_s4_h": "Éco-conception & Budget",
+        "modal.ret_s4_p": "Budget total optimisé de 123,61 € grâce à l'utilisation maximale de pièces recyclées et de chutes de bois au FabLab. Bilan carbone maîtrisé (&lt; 0,5 t eqCO2).",
+        "modal.pre_tag": "Octobre 2026 - En cours · SIGMA Clermont",
+        "modal.pre_title": "Étude de conception et réalisation d'un préhenseur souple",
+        "modal.pre_img_alt": "Prototype du préhenseur souple",
+        "modal.pre_s1_h": "Architecture & Choix du Matériau",
+        "modal.pre_s1_p": "Étude comparative et revue de littérature sur les structures de robotique souple (Soft Robotics). Sélection de l'architecture géométrique et caractérisation des matériaux polymères/élastomères adaptés à la manipulation d'objets fragiles.",
+        "modal.pre_s2_h": "Dimensionnement FEA & Automatisation PyMechanical",
+        "modal.pre_s2_p": "Modélisation CAO paramétrique sous CATIA. Calcul par éléments finis des déformations non-linéaires sous ANSYS FEA. Automatisation des campagnes d'optimisation topologique et de dimensionnement via des scripts Python (PyMechanical).",
+        "modal.pre_s3_h": "Impression 3D & Validation Expérimentale",
+        "modal.pre_s3_p": "Fabrication des prototypes par fabrication additive (impression 3D TPU). Banc d'essai expérimental pour mesurer les forces de préhension et la capacité de déformation.",
+        "modal.pre_s4_h": "Technologies Clés",
+        "modal.pre_s4_p": "CATIA V5, ANSYS FEA, PyMechanical, Python, Soft Robotics, Impression 3D TPU."
+      },
+      en: {
+        "nav.home_aria": "Home",
+        "nav.prev_slide": "Previous slide",
+        "nav.next_slide": "Next slide",
+        "nav.lang_title": "Switch to French",
+        "nav.theme_title": "Toggle theme",
+        "dropdown.title": "Navigation bar · Select a slide",
+        "dropdown.hint": "Scroll / Arrow keys ↑ ↓ to switch slides",
+        "hero.eyebrow": "Portfolio · Mechanical Engineering Student / MRS",
+        "hero.photo_alt": "Profile photo of Alann Savy",
+        "hero.subtitle": "Machines, Robots & Systems @ SIGMA Clermont",
+        "hero.desc": "Mechanical engineering student combining modeling, multivariable control, and simulation to design complex mechatronic systems — with a strong interest in robotics and rail engineering.",
+        "hero.domains": "Robotics · Mechatronics · Simulation · Control Engineering · Rail Systems",
+        "hero.btn_projects": "Explore projects ↘",
+        "profil.eyebrow": "01 / About & Profile",
+        "profil.title": "Design, Control & Systems Vision.",
+        "profil.subtitle": "Mechanical Engineering student at SIGMA Clermont, specializing in Machines, Robots and Systems (MRS).",
+        "profil.bio_p1": "Passionate about technological innovation and the design of complex systems, I am a mechanical engineering student majoring in <strong class=\"dark:text-blue-300 text-[#0f2557] font-semibold\">\"Machines, Robots and Systems\"</strong> at <strong class=\"dark:text-white text-[#0f2557] font-semibold\">SIGMA Clermont</strong>. I have a strong interest in technical challenges related to autonomous robotics, embedded systems, and rail engineering.",
+        "profil.bio_p2": "Throughout my studies, I have strengthened my skills in 3D CAD (<span class=\"font-mono font-medium dark:text-blue-300 text-[#0f2557]\">CATIA V5</span>, <span class=\"font-mono font-medium dark:text-blue-300 text-[#0f2557]\">3DEXPERIENCE</span>), finite element analysis (<span class=\"font-mono font-medium dark:text-blue-300 text-[#0f2557]\">ANSYS</span>), and control/simulation (<span class=\"font-mono font-medium dark:text-blue-300 text-[#0f2557]\">Python</span>, <span class=\"font-mono font-medium dark:text-blue-300 text-[#0f2557]\">MATLAB / Simulink</span>), applying them to hands-on projects from mechatronic prototypes to motion simulators.",
+        "profil.bio_p3": "My research assistant experience at <strong class=\"dark:text-white text-[#0f2557] font-semibold\">Hanoi University of Science and Technology (HUST)</strong> deepened my expertise in 6-DOF modeling and advanced control laws (LQR, MPC), while building adaptability within an international team.",
+        "profil.bio_p4": "Alongside my studies, my leadership roles (Co-President of <strong class=\"dark:text-white text-[#0f2557] font-semibold\">International Team SIGMA</strong> and President of <strong class=\"dark:text-white text-[#0f2557] font-semibold\">SIGMA Boutique</strong>) as well as my BAFA youth leadership experience have helped me combine engineering rigor, budget management, and team leadership.",
+        "profil.avail_title": "Internship Goal & Availability",
+        "profil.avail_desc": "Looking for a graduation internship (up to 3 months) starting <strong class=\"dark:text-white text-[#0f2557]\">April 2027</strong> in robotics, mechatronics, or rail engineering.",
+        "profil.p1_tag": "01 / CAD & MECHANICS",
+        "profil.p1_title": "3D Design & Modeling",
+        "profil.p1_desc": "CATIA V5, 3DEXPERIENCE, 2D drawings, ISO tolerancing, manufacturing documentation.",
+        "profil.p2_tag": "02 / CONTROL & ROBOTICS",
+        "profil.p2_title": "Robotics & Advanced Control",
+        "profil.p2_desc": "6-DOF kinematics/dynamics, cascaded PID, discrete LQR, real-time MPC.",
+        "profil.p3_tag": "03 / SIMULATION & FEA",
+        "profil.p3_title": "Numerical Simulation & FEA",
+        "profil.p3_desc": "MATLAB / Simulink, ANSYS FEA, modal and dynamic analyses.",
+        "profil.p4_tag": "04 / MANAGEMENT & SYSTEMS",
+        "profil.p4_title": "Systems Engineering & Management",
+        "profil.p4_desc": "SysML, FMEA, project management, budget oversight, cross-cultural communication.",
+        "exp.eyebrow": "02 / Professional Experience",
+        "exp.title": "R&D, Research & Field Experience",
+        "exp.main_lab": "Aeronautics Laboratory · HUST (Hanoi, Vietnam)",
+        "exp.main_role": "Laboratory Research Engineer Assistant — Quadcopter Drone",
+        "exp.main_date": "May — Sept. 2026 · 5 months",
+        "exp.details_btn": "View details ↗",
+        "exp.main_desc": "Nonlinear modeling of a 6-DOF quadcopter (12 state variables). Design, implementation, and comparison of three closed-loop control architectures: cascaded PID, discrete LQR, and MPC with a from-scratch Active-Set solver.",
+        "exp.tag_control": "LQR / MPC Control",
+        "exp.tag_model": "6-DOF Modeling",
+        "exp.comp_header": "Additional Work Experience",
+        "exp.comp1_date": "2022 — 2024",
+        "exp.comp1_title": "BAFA Youth Activity Leader",
+        "exp.comp1_desc": "Group management, safety responsibility, adaptability, and on-site responsiveness.",
+        "projects.eyebrow": "03 / Selected Projects",
+        "projects.title": "Design. Model. Evaluate.",
+        "projects.hint": "Click a project to open the gallery and details.",
+        "projects.p1_alt": "Quadcopter Drone Project",
+        "projects.p1_fallback": "6-DOF Simulations",
+        "projects.p1_title": "Quadcopter Modeling & Control",
+        "projects.p1_desc": "6-DOF model, Van Loan discretization, real-time Active-Set solver, and benchmark (PID, LQR, MPC).",
+        "projects.p2_alt": "Hexapod CAD Project",
+        "projects.p2_fallback": "Hexapod Simulator",
+        "projects.p2_title": "Pedal Aircraft & Hexapod Simulator",
+        "projects.p2_desc": "CATIA V5 design, machined housing, BLE/SimConnect telemetry with MSFS 2020.",
+        "projects.p3_alt": "Le Retourneur Sorting Robot Project",
+        "projects.p3_fallback": "Sorting Robot",
+        "projects.p3_title": "Part Sorting Robot \"Le Retourneur\"",
+        "projects.p3_desc": "Autonomous carriage on ball slide, TCS3200 color sensing, and Arduino Uno.",
+        "projects.p4_alt": "Soft Gripper Project",
+        "projects.p4_fallback": "Soft Gripper",
+        "projects.p4_badge": "Oct. 2026 - Ongoing",
+        "projects.p4_title": "Soft Gripper (Soft Robotics)",
+        "projects.p4_desc": "Parametric CAD, ANSYS FEA, PyMechanical, TPU 3D printing, and bench testing.",
+        "projects.preview_btn": "Preview ↗",
+        "skills.eyebrow": "04 / Skills & Tools",
+        "skills.title": "Technical Expertise & Soft Skills",
+        "skills.sub1": "Software Environments & Tools",
+        "skills.t1_sub": "Simulink / Onramp",
+        "skills.t2_sub": "Simulation & Scripting",
+        "skills.t3_sub": "3D CAD & 2D Drawings",
+        "skills.t4_sub": "FEA & PyMechanical",
+        "skills.t5_sub": "Databases",
+        "skills.s1_title": "Rigor & Method",
+        "skills.s1_desc": "Specifications writing, tolerancing, and milestone tracking.",
+        "skills.s2_title": "Cross-Cultural Mindset",
+        "skills.s2_desc": "5-month stay in Vietnam (HUST) & Co-President of International Team.",
+        "skills.s3_title": "Team Management",
+        "skills.s3_desc": "Team leadership and budget management at SIGMA Boutique.",
+        "skills.s4_title": "Collaborative Spirit",
+        "skills.s4_desc": "Smooth teamwork across mechanical, control, and software engineers.",
+        "engagements.eyebrow": "05 / A natural manager",
+        "engagements.title": "Manager by commitment, leader by experience",
+        "engagements.c1_cap": "President of SIGMA Boutique",
+        "engagements.c2_cap": "International students Welcome Day",
+        "engagements.c3_cap": "Team cohesion events organization",
+        "engagements.c4_cap": "Team facilitation and leadership",
+        "engagements.r1_title": "President, SIGMA Boutique (2025-2026)",
+        "engagements.r1_desc": "Budget management, supplier negotiation, team supervision.",
+        "engagements.r2_title": "Co-President, International Team (2025-2026)",
+        "engagements.r2_desc": "Welcoming international students, event planning, volunteer coordination.",
+        "engagements.r3_title": "BAFA Activity Leader (2022-2024)",
+        "engagements.r3_desc": "Group leadership, fast decision-making, and field team cohesion.",
+        "engagements.summary": "My management experience combines hands-on BAFA leadership with student association management: guiding people, adapting to situations, managing budgets, and rallying teams toward shared goals.",
+        "interests.eyebrow": "06 / Interests",
+        "interests.title": "Balance & curiosity.",
+        "interests.desc": "Experiences that foster cultural openness, adventure, and creativity.",
+        "interests.i1_num": "01 / MOBILITY",
+        "interests.i1_title": "Travel",
+        "interests.i1_desc": "Cultural openness & 5-month immersion in Hanoi.",
+        "interests.i2_num": "02 / HORIZON",
+        "interests.i2_title": "Hiking",
+        "interests.i2_desc": "Adventure and offbeat places.",
+        "interests.i3_num": "03 / EXPLORATION",
+        "interests.i3_title": "Outdoors",
+        "interests.i3_desc": "Preparation & self-reliance.",
+        "interests.i4_num": "04 / CREATION",
+        "interests.i4_title": "Photo & Video",
+        "interests.i4_desc": "Editing with DaVinci Resolve.",
+        "journey.eyebrow": "07 / Education",
+        "journey.title": "A background focused on complex systems.",
+        "journey.item1_desc": "M.Sc. in Mechanical Engineering · Machines, Robots and Systems (MRS) track.",
+        "journey.item_hust_title": "Hanoi University of Science and Technology · Vietnam",
+        "journey.item_hust_desc": "R&D Engineering Assistant Internship (5 months) · 6-DOF Modeling & MPC / LQR Control.",
+        "journey.item2_title": "Gustave Eiffel High School · Bordeaux",
+        "journey.item2_desc": "French Preparatory Classes for Grandes Écoles (CPGE) · PTSI / PT.",
+        "contact.eyebrow": "08 / Contact",
+        "contact.title": "Let's discuss an opportunity.",
+        "contact.desc": "Looking for a graduation internship (up to 3 months) starting April 2027 in robotics, mechatronics, or rail engineering.",
+        "contact.form_title": "Send a message",
+        "contact.ph_name": "Your name",
+        "contact.ph_email": "Your email",
+        "contact.ph_subject": "Subject",
+        "contact.ph_msg": "Your message...",
+        "contact.btn_send": "Prepare email ↗",
+        "footer.top": "Back to top ↑",
+        "carousel.prev_img": "Previous image",
+        "carousel.next_img": "Next image",
+        "modal.drone_tag": "R&D HUST Laboratory · 2nd Year Internship",
+        "modal.drone_title": "6-DOF Quadcopter Drone & Advanced Control",
+        "modal.drone_img_alt": "HUST Drone Test Bench",
+        "modal.drone_s1_h": "Modeling & Linearization (12 state variables)",
+        "modal.drone_s1_p": "Derivation of the full nonlinear dynamic model using Newton-Euler equations. Linearization around hover and exact discretization via the Van Loan method without built-in functions (12th-order Taylor series), leveraging the nilpotency of the augmented matrix.",
+        "modal.drone_s2_h": "Control Law Synthesis & Benchmark",
+        "modal.drone_s2_p": "Development and comparative evaluation across 4 flight scenarios: cascaded PID, discrete LQR (tuned via Bryson's rule and Riccati iteration), and Model Predictive Control (MPC). MPC incorporates actuator limits (Thrust 0-200 N, Torques ±2 N·m) and attitude safety bounds (±20°).",
+        "modal.drone_s3_h": "Real-Time Active-Set Solver",
+        "modal.drone_s3_p": "From-scratch implementation of a primal active-set quadratic programming (QP) solver. Guaranteed feasibility through quadratic relaxation of attitude constraints and strict computation time capping (5 ms budget) for real-time execution.",
+        "modal.drone_s4_h": "Key Results",
+        "modal.drone_s4_p": "MPC reduces position RMSE by 70% compared to PID and by 41% compared to LQR. Only MPC completes the fast obstacle-avoidance scenario without attitude divergence.",
+        "modal.hexa_tag": "Engineering Project S8 · SIGMA Clermont",
+        "modal.hexa_title": "Pedal Aircraft & Hexapod Motion Simulator",
+        "modal.hexa_img_alt": "Complete Hexapod Simulator",
+        "modal.hexa_s1_h": "3D CAD Design & Modularity (CATIA V5)",
+        "modal.hexa_s1_p": "CATIA V5 design of a modular dual-plate frame allowing quick switching between \"Fighter Jet\" and \"Pedal Aircraft (DaSH)\" configurations. Custom laser-cut 4 mm steel reinforcement plates, side grip handles, and a custom-machined bottom bracket housing.",
+        "modal.hexa_s2_h": "Telemetry Integration & Transmission Chain",
+        "modal.hexa_s2_p": "Integration of a Wahoo KICKR smart trainer inside the lower cubic frame. Python scripts using <code>bleak</code> (Bluetooth Low Energy / FTMS) and <code>SimConnect</code> transmit the rider's power directly to the MSFS 2020 throttle.",
+        "modal.hexa_s3_h": "Motion Platform Control",
+        "modal.hexa_s3_p": "Coupling MSFS 2020 telemetry with a 6-actuator Stewart platform via FlyPT Mover. Implementation of Rate Washout (RWASH) filtering to convey sustained turn forces while smoothly returning actuators to neutral.",
+        "modal.hexa_s4_h": "Tools & Fabrication",
+        "modal.hexa_s4_p": "CATIA V5, Steel/Wood Laser Cutting, Python (SimConnect/Bleak), FlyPT Mover, MSFS 2020, Bluetooth FTMS.",
+        "modal.ret_tag": "Engineering Project S06 (1st Year) · SIGMA Clermont",
+        "modal.ret_title": "Part Sorting Robot \"Le Retourneur\"",
+        "modal.ret_img_alt": "Final Le Retourneur assembly",
+        "modal.ret_s1_h": "Mechanical Architecture & Precision Guidance",
+        "modal.ret_s1_p": "Design of a mobile carriage guided along the Y-axis on a partial-extension ball slide (rated above 40 kg). Translation is driven by a stepper motor (3 N·m) and a 16 mm MakeBlock rubber wheel. The base was laser-cut from wood at the FabLab.",
+        "modal.ret_s2_h": "Arm Rotation & Gripping Mechanism",
+        "modal.ret_s2_p": "Arm rotation driven by a DC motor (3.5 N·m nominal torque) through a flexible coupling on an M8 threaded shaft. The articulated gripper features aluminum extensions lined with custom rubber pads to maximize grip and prevent metal parts from slipping.",
+        "modal.ret_s3_h": "TCS3200 Color Sensing & Arduino Control",
+        "modal.ret_s3_p": "Integration of a TCS3200 optical color sensor on an offset mount to identify part colors (Blue, White, Red) under controlled LED lighting. Controlled via Arduino Uno with closed-loop sequencing and motion timing.",
+        "modal.ret_s4_h": "Eco-Design & Budget",
+        "modal.ret_s4_p": "Total cost optimized to €123.61 by reusing recycled parts and wood offcuts at the FabLab, with a controlled carbon footprint (< 0.5 t CO2e).",
+        "modal.pre_tag": "October 2026 - Ongoing · SIGMA Clermont",
+        "modal.pre_title": "Design Study and Fabrication of a Soft Gripper",
+        "modal.pre_img_alt": "Soft gripper prototype",
+        "modal.pre_s1_h": "Architecture & Material Selection",
+        "modal.pre_s1_p": "Comparative study and literature review on Soft Robotics structures. Selection of geometric architecture and characterization of polymers/elastomers suited for handling delicate objects.",
+        "modal.pre_s2_h": "FEA Sizing & PyMechanical Automation",
+        "modal.pre_s2_p": "Parametric CAD modeling in CATIA. Nonlinear finite element analysis in ANSYS FEA. Automation of topology optimization and sizing campaigns via Python scripts (PyMechanical).",
+        "modal.pre_s3_h": "3D Printing & Experimental Validation",
+        "modal.pre_s3_p": "Prototype manufacturing via additive manufacturing (TPU 3D printing). Experimental test bench to measure gripping forces and deformation capacity.",
+        "modal.pre_s4_h": "Key Technologies",
+        "modal.pre_s4_p": "CATIA V5, ANSYS FEA, PyMechanical, Python, Soft Robotics, TPU 3D Printing."
+      }
+    };
+
+    const modalCarousels = {
+      drone: {
+        index: 0,
+        items: [
+          {
+            src: "assets/Drone.jpg",
+            captionFr: "Photo 1/1: Banc de test sol & prototype drone quadrirotor HUST",
+            captionEn: "Photo 1/1: Ground test bench & HUST quadcopter prototype"
+          }
+        ]
+      },
+      hexapode: {
+        index: 0,
+        items: [
+          {
+            src: "assets/Hexapode2.jpg",
+            captionFr: "Photo 1/7: Vue latérale du simulateur assemblé en atelier",
+            captionEn: "Photo 1/7: Side view of the simulator assembled in the workshop"
+          },
+          {
+            src: "assets/Hexapodewithuser.png",
+            captionFr: "Photo 2/7: Test utilisateur avec casque VR et commandes de vol",
+            captionEn: "Photo 2/7: User test with VR headset and flight controls"
+          },
+          {
+            src: "assets/CAO Hexapode.png",
+            captionFr: "Visuel 3/7: Modélisation CAO 3D globale de la structure et du pilote",
+            captionEn: "Visual 3/7: Full 3D CAD model of the frame and pilot"
+          },
+          {
+            src: "assets/Support pedalier.png",
+            captionFr: "Photo 4/7: Support de pédalier sur mesure en découpe laser acier",
+            captionEn: "Photo 4/7: Custom laser-cut steel pedal mount"
+          },
+          {
+            src: "assets/Support Boitier pédalier.png",
+            captionFr: "Photo 5/7: Boîtier de pédalier sur mesure après usinage",
+            captionEn: "Photo 5/7: Custom-machined bottom bracket housing"
+          },
+          {
+            src: "assets/CAO support pedalier.png",
+            captionFr: "Visuel 6/7: Conception CAO 3D du support de pédalier renforcé",
+            captionEn: "Visual 6/7: 3D CAD design of the reinforced pedal mount"
+          },
+          {
+            src: "assets/CAO support boitier pédalier.png",
+            captionFr: "Visuel 7/7: Conception CAO 3D du boîtier de pédalier",
+            captionEn: "Visual 7/7: 3D CAD design of the bottom bracket housing"
+          }
+        ]
+      },
+      retourneur: {
+        index: 0,
+        items: [
+          {
+            src: "assets/Projet1A.jpg",
+            captionFr: "Photo 1/3: Vue globale du prototype Le Retourneur assemblé",
+            captionEn: "Photo 1/3: Overall view of the assembled Le Retourneur prototype"
+          },
+          {
+            src: "assets/Pincepr1A.jpg",
+            captionFr: "Photo 2/3: Zoom sur la pince avec garnitures d'adhérence caoutchouc",
+            captionEn: "Photo 2/3: Close-up on the gripper with rubber grip pads"
+          },
+          {
+            src: "assets/plaque1A.jpg",
+            captionFr: "Visuel 3/3: Plateau de jeu et zones d'accueil colorées des pièces",
+            captionEn: "Visual 3/3: Test board and color-coded part target zones"
+          }
+        ]
+      },
+      prehenseur: {
+        index: 0,
+        items: [
+          {
+            src: "assets/Prehenseur.jpg",
+            captionFr: "Photo 1/3: Prototypes de préhenseur souple imprimés en 3D",
+            captionEn: "Photo 1/3: 3D-printed soft gripper prototypes"
+          },
+          {
+            src: "assets/AnsysPrehenseur.png",
+            captionFr: "Visuel 2/3: Simulation FEA des déformations sous ANSYS",
+            captionEn: "Visual 2/3: FEA deformation simulation in ANSYS"
+          },
+          {
+            src: "assets/PrehenseurCAO.png",
+            captionFr: "Visuel 3/3: Modélisation CAO paramétrique sous CATIA",
+            captionEn: "Visual 3/3: Parametric CAD modeling in CATIA"
+          }
+        ]
+      }
+    };
+
+    function getCurrentLang() {
+      return document.documentElement.getAttribute("lang") === "en" ? "en" : "fr";
+    }
+
+    function getSlideTitle(slide, idx, lang = getCurrentLang()) {
+      const attr = lang === "en" ? "data-slide-title-en" : "data-slide-title-fr";
+      return slide.getAttribute(attr) || slide.getAttribute("data-slide-title-fr") || `Slide ${idx + 1}`;
+    }
+
+    function refreshSlideHeaderAndMenu(targetIndex = currentSlideIndex) {
+      const lang = getCurrentLang();
+      const activeSlide = slides[targetIndex];
+      if (activeSlide && slideLabelEl && slideCounterEl) {
+        const code = activeSlide.getAttribute("data-slide-code") || String(targetIndex).padStart(2, "0");
+        const title = getSlideTitle(activeSlide, targetIndex, lang);
+        slideLabelEl.textContent = `${code} · ${title}`;
+        slideCounterEl.textContent = `${targetIndex + 1}/${slides.length}`;
+      }
+
+      document.querySelectorAll(".dropdown-item").forEach((item, idx) => {
+        const slide = slides[idx];
+        if (!slide) return;
+        const code = slide.getAttribute("data-slide-code") || String(idx).padStart(2, "0");
+        const title = getSlideTitle(slide, idx, lang);
+        const titleSpan = item.querySelector(".dropdown-item-title");
+        if (titleSpan) {
+          titleSpan.innerHTML = `<strong class="mr-1 font-bold dark:text-blue-300 text-[#0f2557]">${code}</strong> ${title}`;
+        }
+      });
+    }
+
+    function buildDropdownMenu() {
+      if (!dropdownList) return;
+      const lang = getCurrentLang();
+      dropdownList.innerHTML = "";
+      slides.forEach((slide, idx) => {
+        const code = slide.getAttribute("data-slide-code") || String(idx).padStart(2, "0");
+        const title = getSlideTitle(slide, idx, lang);
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "dropdown-item flex items-center justify-between gap-2 rounded-xl border dark:border-blue-800/70 border-[#0f2557]/30 bg-main-navy px-3 py-2 text-left font-mono text-xs dark:text-white text-[#0f2557] transition dark:hover:border-blue-400 hover:border-[#0f2557] hover:bg-[#0f2557] hover:text-white";
+        btn.dataset.index = String(idx);
+        btn.innerHTML = `
+          <span class="dropdown-item-title truncate"><strong class="mr-1 font-bold dark:text-blue-300 text-[#0f2557]">${code}</strong> ${title}</span>
+          <i class="fa-solid fa-chevron-right text-[9px] opacity-60"></i>
+        `;
+        btn.addEventListener("click", () => {
+          goToSlide(idx);
+          closeDropdown();
+        });
+        dropdownList.appendChild(btn);
+      });
+      refreshSlideHeaderAndMenu(currentSlideIndex);
+    }
+
+    function updateSlideClasses(targetIndex) {
+      slides.forEach((slide, idx) => {
+        slide.classList.remove("is-active", "is-prev", "is-next");
+        if (idx === targetIndex) {
+          slide.classList.add("is-active");
+        } else if (idx < targetIndex) {
+          slide.classList.add("is-prev");
+        } else {
+          slide.classList.add("is-next");
+        }
+      });
+
+      refreshSlideHeaderAndMenu(targetIndex);
+
+      document.querySelectorAll(".dropdown-item").forEach((item, idx) => {
+        if (idx === targetIndex) {
+          item.classList.add("dark:border-blue-400", "border-[#0f2557]", "dark:bg-blue-900/70", "bg-[#0f2557]", "text-white", "font-semibold");
+        } else {
+          item.classList.remove("dark:border-blue-400", "border-[#0f2557]", "dark:bg-blue-900/70", "bg-[#0f2557]", "text-white", "font-semibold");
+        }
+      });
+
+      syncManagementHeights();
+    }
+
+    function goToSlide(index) {
+      const clamped = Math.max(0, Math.min(slides.length - 1, index));
+      if (clamped === currentSlideIndex || isSlideTransitioning) return;
+      isSlideTransitioning = true;
+      currentSlideIndex = clamped;
+      updateSlideClasses(currentSlideIndex);
+      setTimeout(() => {
+        isSlideTransitioning = false;
+      }, 650);
+    }
+
+    function nextDeckSlide() {
+      goToSlide(currentSlideIndex + 1);
+    }
+
+    function prevDeckSlide() {
+      goToSlide(currentSlideIndex - 1);
+    }
+
+    function openDropdown() {
+      if (!dropdownPanel || !dropdownBtn) return;
+      dropdownPanel.classList.remove("is-closed");
+      dropdownPanel.classList.add("is-open");
+      dropdownBtn.setAttribute("aria-expanded", "true");
+      if (dropdownChevron) dropdownChevron.classList.add("rotate-180");
+    }
+
+    function closeDropdown() {
+      if (!dropdownPanel || !dropdownBtn) return;
+      dropdownPanel.classList.remove("is-open");
+      dropdownPanel.classList.add("is-closed");
+      dropdownBtn.setAttribute("aria-expanded", "false");
+      if (dropdownChevron) dropdownChevron.classList.remove("rotate-180");
+    }
+
+    if (dropdownBtn) {
+      dropdownBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = dropdownPanel.classList.contains("is-open");
+        if (isOpen) closeDropdown();
+        else openDropdown();
+      });
+    }
+
+    document.addEventListener("click", (e) => {
+      if (dropdownPanel && !dropdownPanel.contains(e.target) && !dropdownBtn.contains(e.target)) {
+        closeDropdown();
+      }
+    });
+
+    const prevSlideBtn = document.getElementById("slide-prev-btn");
+    const nextSlideBtn = document.getElementById("slide-next-btn");
+    if (prevSlideBtn) prevSlideBtn.addEventListener("click", prevDeckSlide);
+    if (nextSlideBtn) nextSlideBtn.addEventListener("click", nextDeckSlide);
+
+    let wheelLock = false;
+    window.addEventListener("wheel", (e) => {
+      if (document.querySelector(".modal-backdrop:not(.hidden)")) return;
+      if (dropdownPanel && dropdownPanel.classList.contains("is-open")) return;
+
+      if (Math.abs(e.deltaY) < 15) return;
+
+      e.preventDefault();
+      if (!wheelLock) {
+        wheelLock = true;
+        if (e.deltaY > 0) nextDeckSlide();
+        else prevDeckSlide();
+        setTimeout(() => { wheelLock = false; }, 700);
+      }
+    }, { passive: false });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        document.querySelectorAll(".modal-backdrop").forEach((m) => m.classList.add("hidden"));
+        closeDropdown();
+        return;
+      }
+      if (document.querySelector(".modal-backdrop:not(.hidden)")) return;
+      if (["INPUT", "TEXTAREA"].includes(document.activeElement.tagName)) return;
+
+      if (e.key === "ArrowDown" || e.key === "PageDown") {
+        e.preventDefault();
+        nextDeckSlide();
+      } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+        e.preventDefault();
+        prevDeckSlide();
+      }
+    });
+
+    let touchStartY = 0;
+    window.addEventListener("touchstart", (e) => {
+      if (e.touches.length === 1) {
+        touchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+
+    window.addEventListener("touchend", (e) => {
+      if (document.querySelector(".modal-backdrop:not(.hidden)")) return;
+      if (!e.changedTouches.length) return;
+      const dy = e.changedTouches[0].clientY - touchStartY;
+
+      if (Math.abs(dy) > 50) {
+        if (dy < 0) nextDeckSlide();
+        else prevDeckSlide();
+      }
+    }, { passive: true });
+
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.remove("hidden");
+        const key = id.replace("modal-", "");
+        if (modalCarousels[key]) {
+          updateModalSlide(key);
+        }
+      }
+    }
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.classList.add("hidden");
+      }
+    }
+    document.querySelectorAll(".modal-backdrop").forEach((backdrop) => {
+      backdrop.addEventListener("click", (e) => {
+        if (e.target === backdrop) {
+          backdrop.classList.add("hidden");
+        }
+      });
+    });
+
+    function updateModalSlide(key) {
+      const c = modalCarousels[key];
+      if (!c) return;
+      const img = document.getElementById(`img-${key}`);
+      const bg = document.getElementById(`bg-${key}`);
+      const cap = document.getElementById(`caption-${key}`);
+      if (img && cap) {
+        const item = c.items[c.index];
+        img.src = item.src;
+        if (bg) bg.src = item.src;
+        cap.textContent = getCurrentLang() === "en" ? item.captionEn : item.captionFr;
+      }
+    }
+    function nextSlide(key) {
+      const c = modalCarousels[key];
+      if (!c) return;
+      c.index = (c.index + 1) % c.items.length;
+      updateModalSlide(key);
+    }
+    function prevSlide(key) {
+      const c = modalCarousels[key];
+      if (!c) return;
+      c.index = (c.index - 1 + c.items.length) % c.items.length;
+      updateModalSlide(key);
+    }
+
+    function syncManagementHeights() {
+      const leftBox = document.getElementById("management-left-box");
+      const rightBox = document.getElementById("management-right-box");
+
+      if (!leftBox || !rightBox) return;
+
+      if (window.innerWidth >= 1024) {
+        rightBox.style.height = "auto";
+        const rightHeight = rightBox.getBoundingClientRect().height;
+        if (rightHeight > 0) {
+          leftBox.style.height = `${rightHeight}px`;
+        }
+      } else {
+        leftBox.style.height = "";
+        rightBox.style.height = "";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      buildDropdownMenu();
+      updateSlideClasses(0);
+
+      const mgmtSlides = document.querySelectorAll(".management-carousel .management-slide");
+      const prevBtn = document.getElementById("mgmt-prev");
+      const nextBtn = document.getElementById("mgmt-next");
+
+      if (mgmtSlides.length > 0) {
+        let current = 0;
+
+        function showMgmtSlide(index) {
+          current = (index + mgmtSlides.length) % mgmtSlides.length;
+          mgmtSlides.forEach((s) => s.classList.remove("active"));
+          mgmtSlides[current].classList.add("active");
+          syncManagementHeights();
+        }
+
+        let timer = setInterval(() => showMgmtSlide(current + 1), 4000);
+
+        function resetTimer() {
+          clearInterval(timer);
+          timer = setInterval(() => showMgmtSlide(current + 1), 4000);
+        }
+
+        if (prevBtn) {
+          prevBtn.addEventListener("click", () => {
+            showMgmtSlide(current - 1);
+            resetTimer();
+          });
+        }
+        if (nextBtn) {
+          nextBtn.addEventListener("click", () => {
+            showMgmtSlide(current + 1);
+            resetTimer();
+          });
+        }
+      }
+
+      syncManagementHeights();
+      window.addEventListener("load", syncManagementHeights);
+      window.addEventListener("resize", syncManagementHeights);
+    });
+
+    const themeToggle = document.getElementById("theme-toggle");
+    if (themeToggle) {
+      themeToggle.addEventListener("click", () => {
+        const html = document.documentElement;
+        const isDark = html.classList.contains("dark");
+        html.classList.toggle("dark", !isDark);
+        html.classList.toggle("light", isDark);
+        try {
+          localStorage.setItem("alann-portfolio-theme", !isDark ? "dark" : "light");
+        } catch {}
+      });
+    }
+
+    function applyLang(lang) {
+      const normalizedLang = lang === "en" ? "en" : "fr";
+      const dict = i18n[normalizedLang] || i18n.fr;
+      document.documentElement.setAttribute("lang", normalizedLang);
+      const label = document.getElementById("lang-label");
+      if (label) label.textContent = normalizedLang === "fr" ? "EN" : "FR";
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (key && Object.prototype.hasOwnProperty.call(dict, key)) {
+          el.innerHTML = dict[key];
+        }
+      });
+      document.querySelectorAll("[data-i18n-ph]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-ph");
+        if (key && Object.prototype.hasOwnProperty.call(dict, key)) {
+          el.setAttribute("placeholder", dict[key]);
+        }
+      });
+      document.querySelectorAll("[data-i18n-title]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-title");
+        if (key && Object.prototype.hasOwnProperty.call(dict, key)) {
+          el.setAttribute("title", dict[key]);
+        }
+      });
+      document.querySelectorAll("[data-i18n-aria]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-aria");
+        if (key && Object.prototype.hasOwnProperty.call(dict, key)) {
+          el.setAttribute("aria-label", dict[key]);
+        }
+      });
+      document.querySelectorAll("[data-i18n-alt]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-alt");
+        if (key && Object.prototype.hasOwnProperty.call(dict, key)) {
+          el.setAttribute("alt", dict[key]);
+        }
+      });
+
+      refreshSlideHeaderAndMenu(currentSlideIndex);
+      Object.keys(modalCarousels).forEach((key) => updateModalSlide(key));
+
+      try {
+        localStorage.setItem("alann-portfolio-lang", normalizedLang);
+      } catch {}
+      syncManagementHeights();
+    }
+
+    const langToggle = document.getElementById("lang-toggle");
+    if (langToggle) {
+      langToggle.addEventListener("click", () => {
+        const current = getCurrentLang();
+        applyLang(current === "fr" ? "en" : "fr");
+      });
+    }
+    applyLang(document.documentElement.getAttribute("lang") || "fr");
+
+    const contactForm = document.getElementById("contact-form");
+    if (contactForm) {
+      contactForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const data = new FormData(contactForm);
+        const name = data.get("name") || "";
+        const email = data.get("email") || "";
+        const subject = encodeURIComponent(data.get("subject") || "Contact Portfolio");
+        const body = encodeURIComponent(`Nom : ${name}\nE-mail : ${email}\n\n${data.get("message") || ""}`);
+        window.location.href = `mailto:alann.savy@sigma-clermont.fr?subject=${subject}&body=${body}`;
+      });
+    }
+  </script>
+</body>
+</html>
